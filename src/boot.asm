@@ -1,12 +1,24 @@
-ORG 0x7c00 ; ORG 0
+ORG 0
 BITS 16
+
+_start:
+    jmp short fakestart
+    nop
+
+; some empty space so the bios can override some shit and not MY shit
+times 33 db 0
+
+fakestart:
+    jmp 0x7c0:start
 
 start:
     cli ; clear interrupt
-    ; setup memory segmentation and descriptor table
-    ; segment size
-    mov di, 0x77CC
-
+    mov ax, 0x7c0
+    mov ds, ax ; cannot directly move a value into segment registers
+    mov es, ax
+    mov ax, 0x00
+    mov ss, ax
+    mov sp, 0x7c00 ; sp grows downwards 
     sti ; enable interrupt handling
 
     mov si, message
