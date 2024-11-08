@@ -23,6 +23,7 @@ start:
 
     mov si, message
     call print
+    call _kernel_start  
     jmp $
 
 print:
