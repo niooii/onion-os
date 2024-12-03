@@ -1,6 +1,8 @@
 .POSIX:
 .PHONY: all clean
 
+SRCDIR = src
+BUILDDIR = build
 SOURCE = loader.c
 TARGET = BOOTX64.EFI
 
@@ -23,10 +25,10 @@ CFLAGS = \
 all: $(TARGET)
 	
 
-$(TARGET): $(SOURCE)
+$(TARGET): $(SRCDIR)/$(SOURCE)
 	$(CC) $(CFLAGS) -o $@ $<
-	mkdir -p ./build/EFI/BOOT/
-	mv $(TARGET) ./build/EFI/BOOT/
+	mkdir -p $(BUILDDIR)/EFI/BOOT/
+	mv $(TARGET) $(BUILDDIR)/EFI/BOOT/
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(BUILDDIR)
