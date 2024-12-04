@@ -16,13 +16,16 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
 
     SystemTable->ConOut->OutputString(SystemTable->ConOut, u"hi chat\r\n\r\n");
     
-    SystemTable->ConOut->SetAttribute(SystemTable->ConOut, 
-            EFI_TEXT_ATTR(EFI_RED,EFI_BLACK));
+    SystemTable->ConOut->SetAttribute(
+        SystemTable->ConOut,
+        EFI_TEXT_ATTR(EFI_RED,EFI_BLACK)
+    );
 
-    SystemTable->ConOut->OutputString(SystemTable->ConOut, 
-            u"press any key to shutdown..."); 
+    SystemTable->ConOut->OutputString(
+        SystemTable->ConOut, 
+        u"press any key to dfgdfshutdown..."
+    ); 
 
-            // wait until key is pressed
     EFI_INPUT_KEY key;
     while (SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn, &key) != EFI_SUCCESS);
     
