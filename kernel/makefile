@@ -13,7 +13,7 @@ CC = i386-elf-gcc \
 	-mno-red-zone 
 
 LD = i386-elf-ld
-LDFLAGS = 
+LDFLAGS = --entry=main -nostdlib
 
 KERNEL_SOURCES = $(wildcard src/*.c)
 KERNEL_OBJECTS = $(patsubst src/%.c,$(BUILDDIR)/%.o,$(KERNEL_SOURCES))

@@ -37,16 +37,16 @@ disk_error:
     jmp $
 
 disk_read_done:
-    ; clear screen
-    mov ah, 0x0
-    mov al, 0x3
-    int 0x10
     mov bx, enteringProtectedMsg
     call printBios
 
+; clear screen
+mov ah, 0x0
+mov al, 0x3
+int 0x10
+; protected mode stuff
 cli
 lgdt [GDT_Descriptor]
-; set cr0 to 1
 mov eax, cr0
 or eax, 1
 mov cr0, eax
@@ -107,11 +107,22 @@ GDT_Descriptor:
 
 [bits 32]
 start_protected_mode:
-    mov al, 'A'
-    mov ah, 0x0f
-    mov [0xb8000], ax
+    ; setup segments and the stack
+    mov ax, DATA_SEG
+    mov ds, ax
+    mov ss, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ebp, 0x90000
+    mov esp, ebp
     jmp KERNEL_LOC
 
+    cli
+    hlt
+    jmp $
+
+    
 enteringProtectedMsg:
     db "Entering protected mode...", 0
 
