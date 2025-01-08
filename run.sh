@@ -5,4 +5,4 @@ if !([ -d "$BUILDDIR" ];) then
   exit 1
 fi
 
-qemu-system-x86_64 -drive if=pflash,format=raw,readonly=on,file=/usr/share/ovmf/x64/OVMF.4m.fd -drive format=raw,file=fat:rw:./build/ -net none
+qemu-system-x86_64 -drive format=raw,file="build/os.bin",index=0,if=floppy, -m 128M

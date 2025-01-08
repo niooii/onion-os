@@ -1,4 +1,16 @@
-cd efi && make \
+# TODO! make better lol wtf is this
+
+source ./export_envs
+
+cd loader \
+&& make \
 && cd .. \
 && mkdir -p ./build \
-&& cp -r ./efi/build/* ./build/
+&& cp -r ./loader/build/boot.bin ./build/ \
+&& cd kernel && make \
+&& cd .. \
+&& cp ./kernel/build/kernel.bin ./build/ \
+&& cd ./build \
+&& cat boot.bin kernel.bin > os.bin
+
+echo "FINISH."

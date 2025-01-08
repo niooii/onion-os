@@ -1,21 +1,48 @@
 [org 0x7c00]
 
 KERNEL_LOC equ 0x1000
+; set offset constants
+CODE_SEG equ code_descriptor - GDT_START
+DATA_SEG equ data_descriptor - GDT_START
 
 BOOT_DISK: db 0
 mov [BOOT_DISK], dl
 
+; stack stuff
+mov bp, 0x8000
+mov sp, bp
+
 mov bx, readingDiskMsg
 call printBios
 
+xor ax, ax
+; zero segment registers
+mov es, ax
+mov ds, ax
 
+mov bx, KERNEL_LOC
+mov ah, 0x02 ; read sectors
+mov al, 4    ; num to read
+mov ch, 0x00 ; cylinder num
+mov dh, 0x00 ; head num
+mov cl, 0x02 ; start sector num (from 1)
+mov dl, [BOOT_DISK] ; drive num
+int 0x13
 
-mov bx, enteringProtectedMsg
-call printBios
+jnc disk_read_done
 
-; set offset constants
-CODE_SEG equ code_descriptor - GDT_START
-DATA_SEG equ data_descriptor - GDT_START
+disk_error:
+    mov bx, diskReadErrorMsg
+    call printBios
+    jmp $
+
+disk_read_done:
+    ; clear screen
+    mov ah, 0x0
+    mov al, 0x3
+    int 0x10
+    mov bx, enteringProtectedMsg
+    call printBios
 
 cli
 lgdt [GDT_Descriptor]
@@ -83,13 +110,16 @@ start_protected_mode:
     mov al, 'A'
     mov ah, 0x0f
     mov [0xb8000], ax
-    jmp $
+    jmp KERNEL_LOC
 
 enteringProtectedMsg:
     db "Entering protected mode...", 0
 
 readingDiskMsg:
-    db " Reading disk...", 0
+    db "Reading disk...", 0
+
+diskReadErrorMsg:
+    db "Disk read failed!", 0
 
 times 510-($-$$) db 0
 db 0x55, 0xAA
