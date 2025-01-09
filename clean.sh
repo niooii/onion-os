@@ -1,5 +1,5 @@
 rm -rf build &&\
-cd efi &&\
+cd loader &&\
 make clean &&\
 cd .. && cd kernel &&\
 make clean

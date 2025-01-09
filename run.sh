@@ -5,4 +5,10 @@ if !([ -d "$BUILDDIR" ];) then
   exit 1
 fi
 
+if [ "$1" = "debug" ]; then
+  echo Starting debug environment...
+  gdb -ex "target remote | qemu-system-x86_64 -drive format=raw,file=\"build/os.bin\",index=0,if=floppy -m 128M -S -gdb stdio"
+  exit 0
+fi
+
 qemu-system-x86_64 -drive format=raw,file="build/os.bin",index=0,if=floppy, -m 128M
