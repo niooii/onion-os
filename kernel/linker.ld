@@ -4,12 +4,20 @@ SECTIONS
 {
     . = 0x1000;
     .text : ALIGN(16) {
+        *(.text.kernel_main)
         *(.text)
     }
-    .data : ALIGN(16) {
-        *(.data)
+    .rodata ALIGN(16) : {
+        *(.rodata*)
     }
-    .bss : ALIGN(16) {
-        *(.bss)
+    .data ALIGN(16) : {
+        *(.data*)
+    }
+    .bss ALIGN(16) : {
+        *(COMMON)
+        *(.bss*)
+    }
+    .asm ALIGN(16) : {
+        *(.asm)
     }
 }

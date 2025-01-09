@@ -1,21 +1,16 @@
 #include <kernel.h>
-volatile char* cursor_pos = (volatile char*)0xb8000;
+#include <oos/idt.h>
+#include <oos/vga.h>
 
-void kernel_main() {
-    // volatile char* cursor_pos = (volatile char*)0xb8000;
-    print("Hello FROMAasWF KERNEL YIPPEEEE");
-    print(" hello again");
-    print(" hello again");
-    print(" hello again");
-    print(" hello again");
-    print(" hello again");
-    
+extern void div_zero();
+void kernel_main() 
+{
+    vga_print("Hello world..");
+
+    idt_init();
+
+    // TODO! THIS DOTN WORK!! infinite loop and stuff..
+    div_zero();
+
     while (1);
-}
-
-void print(const char* str) {
-    while (*str) {
-        *cursor_pos++ = *str++;
-        *cursor_pos++ = 0x0f; 
-    }
 }

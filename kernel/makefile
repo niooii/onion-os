@@ -16,22 +16,35 @@ CC = i386-elf-gcc \
 	-g \
 	-c \
 	-mno-red-zone 
-
+ASM = nasm -f elf -g 
 LD = i386-elf-ld
 LDFLAGS = -T linker.ld -nostdlib
 
-KERNEL_SOURCES = $(wildcard src/*.c)
-KERNEL_OBJECTS = $(patsubst src/%.c,$(BUILDDIR)/%.o,$(KERNEL_SOURCES))
+KERNEL_MAIN = src/kernel.c
+OOS_C_SOURCES = $(shell find src/oos -name '*.c')
+OOS_ASM_SOURCES = $(shell find src/oos -name '*.s')
+
+KERNEL_MAIN_OBJ = $(BUILDDIR)/kernel.o
+OOS_C_OBJECTS = $(patsubst src/oos/%.c,$(BUILDDIR)/%.c.o,$(OOS_C_SOURCES))
+OOS_ASM_OBJECTS = $(patsubst src/oos/%.s,$(BUILDDIR)/%.s.o,$(OOS_ASM_SOURCES))
+ALL_OBJECTS = $(KERNEL_MAIN_OBJ) $(OOS_C_OBJECTS) $(OOS_ASM_OBJECTS)
 
 all: kernel.bin
 
-kernel.bin: $(KERNEL_OBJECTS)
-	$(LD) $(LDFLAGS) $(KERNEL_OBJECTS) -o $(BUILDDIR)/kernel.bin
+kernel.bin: $(ALL_OBJECTS)
+	$(LD) $(LDFLAGS) $(ALL_OBJECTS) -o $(BUILDDIR)/kernel.bin
 
-$(BUILDDIR)/%.o: src/%.c
-	mkdir -p $(BUILDDIR)
+$(KERNEL_MAIN_OBJ): $(KERNEL_MAIN)
+	mkdir -p $(dir $@)
 	$(CC) $< -o $@
 
+$(BUILDDIR)/%.c.o: src/oos/%.c
+	mkdir -p $(dir $@)
+	$(CC) $< -o $@
+
+$(BUILDDIR)/%.s.o: src/oos/%.s
+	mkdir -p $(dir $@)
+	$(ASM) $< -o $@
 
 clean:
 	rm -rf $(BUILDDIR)
