@@ -32,7 +32,8 @@ ALL_OBJECTS = $(KERNEL_MAIN_OBJ) $(OOS_C_OBJECTS) $(OOS_ASM_OBJECTS)
 all: kernel.bin
 
 kernel.bin: $(ALL_OBJECTS)
-	$(LD) $(LDFLAGS) $(ALL_OBJECTS) -o $(BUILDDIR)/kernel.bin
+	$(LD) -g -relocatable $(ALL_OBJECTS) -o build/ksymbols.o
+	$(LD) $(LDFLAGS) build/ksymbols.o -o $(BUILDDIR)/kernel.bin 
 
 $(KERNEL_MAIN_OBJ): $(KERNEL_MAIN)
 	mkdir -p $(dir $@)

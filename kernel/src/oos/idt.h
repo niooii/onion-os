@@ -15,7 +15,7 @@ struct idt_entry {
     uint16_t offset_low;    // lower 16 bits of handler address
     uint16_t selector;      // kernel segment selector
     uint8_t zero;           // unused
-    uint8_t type_attr;      // ty2369+3pe and attributes
+    uint8_t type_attr;      // type and attributes
     uint16_t offset_high;   // upper 16 bits of handler address
 } __attribute__((packed));
 

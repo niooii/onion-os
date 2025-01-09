@@ -10,6 +10,7 @@ cd loader \
 && cd kernel && make \
 && cd .. \
 && cp ./kernel/build/kernel.bin ./build/ \
+&& cp ./kernel/build/ksymbols.o ./build/ \
 && cd ./build \
 && cat boot.bin kernel.bin > os.bin
 

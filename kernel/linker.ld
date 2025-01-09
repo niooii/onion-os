@@ -17,7 +17,4 @@ SECTIONS
         *(COMMON)
         *(.bss*)
     }
-    .asm ALIGN(16) : {
-        *(.asm)
-    }
 }

@@ -1,6 +1,7 @@
 #include <kernel.h>
 #include <oos/idt.h>
 #include <oos/vga.h>
+#include <oos/io/io.h>
 
 extern void div_zero();
 void kernel_main() 
@@ -9,8 +10,8 @@ void kernel_main()
 
     idt_init();
 
-    // TODO! THIS DOTN WORK!! infinite loop and stuff..
-    div_zero();
+    outb(0x60, 0xff);
+    vga_print("PLUH?..");
 
     while (1);
 }

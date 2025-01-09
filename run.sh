@@ -7,7 +7,7 @@ fi
 
 if [ "$1" = "debug" ]; then
   echo Starting debug environment...
-  gdb -ex "target remote | qemu-system-x86_64 -drive format=raw,file=\"build/os.bin\",index=0,if=floppy -m 128M -S -gdb stdio"
+  gdb -x debug.gdb
   exit 0
 fi
 

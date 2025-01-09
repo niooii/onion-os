@@ -1,9 +1,9 @@
 [BITS 32]
 global div_zero
 
-section .asm
+section .text
     div_zero:
-        mov eax, 0
-        div eax
-
-        jmp $
+        mov eax, 0xDEADBEEF
+        mov ebx, 0
+        div ebx
+        ret
