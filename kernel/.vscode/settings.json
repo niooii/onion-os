@@ -15,4 +15,9 @@
     "editor.tabCompletion": "on",
     "todohighlight.isEnable": true,
     "makefile.configureOnOpen": false,
+    "files.associations": {
+        "idt.h": "c",
+        "kernel.h": "c",
+        "cstddef": "cpp"
+    },
 }

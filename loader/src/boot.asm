@@ -120,15 +120,18 @@ start_protected_mode:
     mov gs, ax
     mov ebp, 0x90000
     mov esp, ebp
+
     jmp KERNEL_LOC
 
     cli
     hlt
     jmp $
 
-    
 enteringProtectedMsg:
     db "Entering protected mode...", 0
+    
+failedToLoadKernelmsg:
+    db "Failed to load kernel...", 0
 
 readingDiskMsg:
     db "Reading disk...", 0
