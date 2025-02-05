@@ -7,6 +7,7 @@ TARGET = onion_os.bin
 
 CC = i386-elf-gcc \
 	-Isrc \
+	-Iinclude \
 	-ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops \
 	-fstrength-reduce -fomit-frame-pointer -finline-functions \
 	-Wno-unused-functions -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter \
