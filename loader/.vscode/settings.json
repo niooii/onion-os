@@ -15,4 +15,5 @@
     "editor.tabCompletion": "on",
     "todohighlight.isEnable": true,
     "makefile.configureOnOpen": false,
+    "nasm.outputFormat": "elf32"
 }

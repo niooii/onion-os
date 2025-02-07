@@ -21,14 +21,14 @@ ASM = nasm -f elf -g
 LD = i386-elf-ld
 LDFLAGS = -T linker.ld -nostdlib
 
-KERNEL_MAIN = src/kernel.c
-OOS_C_SOURCES = $(shell find src/oos -name '*.c')
-OOS_ASM_SOURCES = $(shell find src/oos -name '*.s')
+ENTRY = entry.s
+OOS_C_SOURCES = $(shell find src -name '*.c')
+OOS_ASM_SOURCES = $(shell find src -name '*.s')
 
-KERNEL_MAIN_OBJ = $(BUILDDIR)/kernel.o
-OOS_C_OBJECTS = $(patsubst src/oos/%.c,$(BUILDDIR)/%.c.o,$(OOS_C_SOURCES))
-OOS_ASM_OBJECTS = $(patsubst src/oos/%.s,$(BUILDDIR)/%.s.o,$(OOS_ASM_SOURCES))
-ALL_OBJECTS = $(KERNEL_MAIN_OBJ) $(OOS_C_OBJECTS) $(OOS_ASM_OBJECTS)
+ENTRY_OBJ = $(BUILDDIR)/entry.o
+OOS_C_OBJECTS = $(patsubst src/%.c,$(BUILDDIR)/%.c.o,$(OOS_C_SOURCES))
+OOS_ASM_OBJECTS = $(patsubst src/%.s,$(BUILDDIR)/%.s.o,$(OOS_ASM_SOURCES))
+ALL_OBJECTS = $(ENTRY_OBJ) $(OOS_C_OBJECTS) $(OOS_ASM_OBJECTS)
 
 all: kernel.bin
 
@@ -36,15 +36,15 @@ kernel.bin: $(ALL_OBJECTS)
 	$(LD) -g -relocatable $(ALL_OBJECTS) -o build/ksymbols.o
 	$(LD) $(LDFLAGS) build/ksymbols.o -o $(BUILDDIR)/kernel.bin 
 
-$(KERNEL_MAIN_OBJ): $(KERNEL_MAIN)
+$(ENTRY_OBJ): $(ENTRY)
+	mkdir -p $(dir $@)
+	$(ASM) $< -o $@
+
+$(BUILDDIR)/%.c.o: src/%.c
 	mkdir -p $(dir $@)
 	$(CC) $< -o $@
 
-$(BUILDDIR)/%.c.o: src/oos/%.c
-	mkdir -p $(dir $@)
-	$(CC) $< -o $@
-
-$(BUILDDIR)/%.s.o: src/oos/%.s
+$(BUILDDIR)/%.s.o: src/%.s
 	mkdir -p $(dir $@)
 	$(ASM) $< -o $@
 

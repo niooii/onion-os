@@ -20,4 +20,5 @@
         "kernel.h": "c",
         "cstddef": "cpp"
     },
+    "nasm.outputFormat": "elf32"
 }

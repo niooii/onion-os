@@ -1,5 +1,5 @@
+set -e
 BUILDDIR="build"
-
 if !([ -d "$BUILDDIR" ];) then
   echo "$BUILDDIR directory does not exist. Try running ./build.sh first"
   exit 1

@@ -3,7 +3,7 @@
 
 SRCDIR = src
 BUILDDIR = build
-SOURCE = boot.asm
+SOURCE = boot.s
 TARGET = boot.bin
 
 ASM = nasm 

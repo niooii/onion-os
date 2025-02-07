@@ -3,5 +3,6 @@
         "system_error": "c",
         "sstream": "c",
         "regex": "c"
-    }
+    },
+    "nasm.outputFormat": "elf32"
 }

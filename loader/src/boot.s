@@ -44,10 +44,6 @@ disk_read_done:
 mov ah, 0x0
 mov al, 0x3
 int 0x10
-; fast a20 gate thing
-in al, 0x92 
-or al, 2
-out 0x92, al
 ; protected mode stuff
 cli
 lgdt [GDT_Descriptor]

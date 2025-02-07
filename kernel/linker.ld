@@ -1,10 +1,9 @@
-ENTRY(kernel_main)
+ENTRY(entry)
 OUTPUT_FORMAT(binary)
 SECTIONS
 {
     . = 0x1000;
     .text : ALIGN(16) {
-        *(.text.kernel_main)
         *(.text)
     }
     .rodata ALIGN(16) : {
