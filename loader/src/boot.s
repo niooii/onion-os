@@ -1,13 +1,25 @@
 [org 0x7c00]
+BITS 16
 
 KERNEL_LOC equ 0x1000
 ; set offset constants
 CODE_SEG equ code_descriptor - GDT_START
 DATA_SEG equ data_descriptor - GDT_START
 
+jmp short start
+nop
+times 33 db 0  
+
 BOOT_DISK: db 0
+
+start:
+cli
 mov [BOOT_DISK], dl
 
+; zero segment registers
+xor ax, ax
+mov es, ax
+mov ds, ax
 ; stack stuff
 mov bp, 0x8000
 mov sp, bp
@@ -15,14 +27,9 @@ mov sp, bp
 mov bx, readingDiskMsg
 call printBios
 
-xor ax, ax
-; zero segment registers
-mov es, ax
-mov ds, ax
-
 mov bx, KERNEL_LOC
 mov ah, 0x02 ; read sectors
-mov al, 4    ; num to read
+mov al, 50    ; num to read
 mov ch, 0x00 ; cylinder num
 mov dh, 0x00 ; head num
 mov cl, 0x02 ; start sector num (from 1)
@@ -107,16 +114,6 @@ GDT_Descriptor:
 
 [bits 32]
 start_protected_mode:
-    ; setup segments and the stack
-    mov ax, DATA_SEG
-    mov ds, ax
-    mov ss, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ebp, 0x90000
-    mov esp, ebp
-
     jmp KERNEL_LOC
 
     cli

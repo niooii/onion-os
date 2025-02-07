@@ -29,7 +29,7 @@ void idt_set(int i, void* addr)
     struct idt_entry* entry = &entries[i];
     entry->offset_low = (uint32_t) addr & 0x0000ffff;
     entry->offset_high = (uint32_t) addr >> 16;
-    entry->selector = KERNEL_CODE_SELECTOR;
+    entry->selector = CODE_SELECTOR;
     entry->type_attr = 0xEE;
 }
 
@@ -44,4 +44,5 @@ void idt_init()
 
     // load idt
     ASM("lidt %0" : : "m"(descriptor));
+    ASM("sti");
 }
