@@ -10,8 +10,9 @@ extern void int21h();
 
 void int21_handler()
 {
-    vga_print("BLUH bluh");
+    vga_print("BLUH bluh ");
     outb(0x20, 0x20);
+    vga_print("finishh bluh");
 }
 
 // TODO!
@@ -44,5 +45,4 @@ void idt_init()
 
     // load idt
     ASM("lidt %0" : : "m"(descriptor));
-    ASM("sti");
 }
