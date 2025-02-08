@@ -1,17 +1,17 @@
-#include <oos/idt.h>
-#include <oos/mem.h>
-#include <oos/vga.h>
-#include <oos/io/io.h>
+#include <idt.h>
+#include <mem.h>
+#include <vga.h>
+#include <io.h>
 
 struct idt_entry entries[OOS_INTS_MAX];
 struct idt_descriptor descriptor;
 
 extern void int21h();
 
-void int21_handler()
+void on_keypress()
 {
     vga_print("BLUH bluh ");
-    outb(0x20, 0x20);
+    // outb(0x20, 0x20);
     vga_print("finishh bluh");
 }
 
@@ -41,7 +41,8 @@ void idt_init()
     descriptor.base = (uint32_t) entries;
 
     idt_set(0, divide_zero_err);
-    idt_set(0x21, int21_handler);
+    idt_set(0x20, on_keypress);
+    idt_set(0x21, on_keypress);
 
     // load idt
     ASM("lidt %0" : : "m"(descriptor));

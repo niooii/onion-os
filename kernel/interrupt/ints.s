@@ -1,13 +1,13 @@
 section .text
 
-extern int21_handler
+extern on_keypress
 
 global int21h
 
 extern int21h:
     cli
     pushad
-    call int21_handler
+    call on_keypress
     popad
     sti
     iret

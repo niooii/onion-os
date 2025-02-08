@@ -4,6 +4,7 @@ SECTIONS
 {
     . = 0x1000;
     .text : ALIGN(16) {
+        *(.text.entryasm)
         *(.text)
     }
 

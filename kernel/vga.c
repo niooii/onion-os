@@ -1,4 +1,4 @@
-#include <oos/vga.h>
+#include <vga.h>
 
 volatile char* cursor_pos = (volatile char*)0xb8000;
 
