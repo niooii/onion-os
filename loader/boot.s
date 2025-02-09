@@ -27,7 +27,6 @@ mov ah, 0x0
 mov al, 0x3
 int 0x10
 ; protected mode stuff
-cli
 lgdt [GDT_Descriptor]
 mov eax, cr0
 or eax, 1
@@ -50,7 +49,7 @@ pb_loop:
 
 pb_done:
     mov al, 0xa ; newline
-    int 0x10
+    int 0x10 
     mov al, 0xd ; carriage return
     int 0x10
     pop ax
@@ -93,14 +92,16 @@ start_protected_mode:
     mov eax, 1
     mov ecx, 100
     mov edi, KERNEL_LOC
+    call ata_lba_read
     jmp CODE_SEG:KERNEL_LOC
 
     cli
     hlt
     jmp $
 
+; HATE. LET ME TELL YOU HOW MUCH I'VE COME TO HATE YOU, SINCE I'VE BEGAN TO LIVE.
 ata_lba_read:
-    mov ebx, eax, ; Backup the LBA
+    mov ebx, eax,
     ; Send the highest 8 bits of the lba to hard disk controller
     shr eax, 24
     or eax, 0xE0 ; Select the  master drive
@@ -157,18 +158,6 @@ ata_lba_read:
     loop .next_sector
     ; End of reading sectors into memory
     ret
-
-enteringProtectedMsg:
-    db "Entering protected mode...", 0
-    
-failedToLoadKernelmsg:
-    db "Failed to load kernel...", 0
-
-readingDiskMsg:
-    db "Reading disk...", 0
-
-diskReadErrorMsg:
-    db "Disk read failed!", 0
 
 times 510-($-$$) db 0
 db 0x55, 0xAA
