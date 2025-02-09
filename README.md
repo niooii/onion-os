@@ -7,4 +7,4 @@
 - qemu-system-x86_64 (package: qemu)
 - nasm
 - base-devel
-3. Run `./build.sh`, then `./run.sh`
+3. Run `make run`, or `make debug`
