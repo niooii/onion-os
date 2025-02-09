@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <def.h>
 
-#define OOS_INTS_MAX 512
+#define OOS_MAX_INTS 512
 
 enum GATE_TYPE {
     GATE_TYPE_TASK_32 = 0x5,

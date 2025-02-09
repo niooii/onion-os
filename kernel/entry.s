@@ -38,3 +38,5 @@ entry:
 
     jmp $
 
+; stupid alignment issues
+times 512-($ - $$) db 0

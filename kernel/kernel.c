@@ -11,7 +11,6 @@ void kernel_main()
     idt_init();
     // div_zero();
 
-    outb(0x60, 0xff);
     for (int i = 0; i < 200; i++) {
         vga_print("a ");
     }

@@ -51,6 +51,7 @@ ALL_OBJS = $(KERNEL_C_OBJS) $(KERNEL_ASM_OBJS)
 all: $(BUILD_DIR)/os.bin
 
 $(BUILD_DIR)/os.bin: $(BUILD_DIR)/boot.bin $(BUILD_DIR)/kernel.bin
+	rm -f $@
 	dd if=$(BUILD_DIR)/boot.bin >> $@
 	dd if=$(BUILD_DIR)/kernel.bin >> $@
 	dd if=/dev/zero bs=512 count=100 >> $@
@@ -76,7 +77,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 run: $(BUILD_DIR)/os.bin
-	qemu-system-x86_64 -drive format=raw,file=$<,index=0,if=floppy -m 128M
+	qemu-system-x86_64 -hda $<
 
 debug: $(BUILD_DIR)/os.bin
 	gdb -x debug.gdb
