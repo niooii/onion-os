@@ -10,11 +10,8 @@ jmp short start
 nop
 times 33 db 0  
 
-BOOT_DISK: db 0
-
 start:
 cli
-mov [BOOT_DISK], dl
 
 ; zero segment registers
 xor ax, ax
