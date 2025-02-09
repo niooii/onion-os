@@ -9,11 +9,8 @@ void kernel_main()
     vga_print("Hello world..");
 
     idt_init();
-    // div_zero();
 
-    for (int i = 0; i < 200; i++) {
-        vga_print("a ");
-    }
+    idt_load();
 
     while (1);
 }

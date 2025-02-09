@@ -11,6 +11,18 @@ enum GATE_TYPE {
     GATE_TYPE_TRAP_32 = 0xF
 };
 
+// Declare a new hardware interrupt.
+#define DECLARE_HW_INT(name)     \
+    void name##_ihandler();      \
+    extern void name##_iasm();
+
+// Implement the new hardware interrupt.
+#define DEFINE_HW_INT(name, code)  \
+    void name##_ihandler() {       \
+        code                       \
+        outb(0x20, 0x20);          \
+    }
+
 struct idt_entry {
     uint16_t offset_low;    // lower 16 bits of handler address
     uint16_t selector;      // kernel segment selector
@@ -26,3 +38,4 @@ struct idt_descriptor {
 
 void idt_set(int i, void* addr);
 void idt_init();
+void idt_load();

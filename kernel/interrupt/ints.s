@@ -1,23 +1,17 @@
 section .text
 
-extern on_keypress
-extern on_unimplemented
-
-global int21h
-global int_unimplemented
-
-int21h:
+%macro NEW_HW_INT 1
+global %1%+_iasm
+extern %1%+_ihandler
+%1%+_iasm:
     cli
     pushad
-    call on_keypress
+    call %1%+_ihandler
     popad
     sti
     iret
+%endmacro
 
-int_unimplemented:
-    cli
-    pushad
-    call on_unimplemented
-    popad
-    sti
-    iret
+NEW_HW_INT timer
+NEW_HW_INT keypress
+NEW_HW_INT unimplemented

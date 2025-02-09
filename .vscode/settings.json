@@ -20,7 +20,10 @@
         "kernel.h": "c",
         "cstddef": "cpp",
         "vga.h": "c",
-        "io.h": "c"
+        "io.h": "c",
+        "chrono": "c",
+        "text_encoding": "c",
+        "typeinfo": "c"
     },
     "nasm.outputFormat": "elf32"
 }
