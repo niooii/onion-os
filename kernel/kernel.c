@@ -1,6 +1,6 @@
 #include <kernel.h>
 #include <idt.h>
-#include <vga.h>
+#include <drivers/vga.h>
 #include <io.h>
 
 extern void div_zero();

@@ -1,6 +1,7 @@
 #include <idt.h>
 #include <mem.h>
-#include <vga.h>
+#include <drivers/vga.h>
+#include <drivers/keyboard.h>
 #include <io.h>
 
 struct idt_entry entries[OOS_MAX_INTS];
@@ -11,12 +12,13 @@ DEFINE_HW_INT(unimplemented, {});
 
 DECLARE_HW_INT(keypress);
 DEFINE_HW_INT(keypress, {
-    vga_print("PLUH??");
+    uint8_t sc = insb(0x60);
+    handle_scancode(sc);
 });
 
 DECLARE_HW_INT(timer);
 DEFINE_HW_INT(timer, {
-    vga_print("timer hi ");
+    // vga_print("timer hi ");
 });
 
 // TODO!

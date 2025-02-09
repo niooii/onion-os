@@ -2,6 +2,9 @@
 typedef unsigned int size_t;
 typedef unsigned char uchar;
 typedef unsigned short ushort;
+#define bool char
+#define true 1
+#define false 0
 
 #define ASM __asm__ volatile
 #define CODE_SELECTOR 0x8

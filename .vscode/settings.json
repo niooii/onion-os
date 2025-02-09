@@ -23,7 +23,10 @@
         "io.h": "c",
         "chrono": "c",
         "text_encoding": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "random": "c",
+        "mem.h": "c",
+        "keyboard.h": "c"
     },
     "nasm.outputFormat": "elf32"
 }
