@@ -1,72 +1,106 @@
-ORG 0x7c00
+[org 0x7c00]
 BITS 16
 
-CODE_SEG equ gdt_code - gdt_start
-DATA_SEG equ gdt_data - gdt_start
+KERNEL_LOC equ 0x100000
+; set offset constants
+CODE_SEG equ code_descriptor - GDT_START
+DATA_SEG equ data_descriptor - GDT_START
 
-_start:
-    jmp short start
-    nop
+jmp short start
+nop
+times 33 db 0  
 
- times 33 db 0
- 
+BOOT_DISK: db 0
+
 start:
-    jmp 0:step2
+cli
+mov [BOOT_DISK], dl
 
-step2:
-    cli ; Clear Interrupts
-    mov ax, 0x00
-    mov ds, ax
-    mov es, ax
-    mov ss, ax
-    mov sp, 0x7c00
-    sti ; Enables Interrupts
+; zero segment registers
+xor ax, ax
+mov ds, ax
+mov es, ax
+mov ss, ax
+; stack stuff
+mov bp, 0x7c00
+mov sp, bp
 
-.load_protected:
-    cli
-    lgdt[gdt_descriptor]
-    mov eax, cr0
-    or eax, 0x1
-    mov cr0, eax
-    jmp CODE_SEG:load32
-    
-; GDT
-gdt_start:
-gdt_null:
-    dd 0x0
-    dd 0x0
+; clear screen
+mov ah, 0x0
+mov al, 0x3
+int 0x10
+; protected mode stuff
+cli
+lgdt [GDT_Descriptor]
+mov eax, cr0
+or eax, 1
+mov cr0, eax
+jmp CODE_SEG:start_protected_mode
 
-; offset 0x8
-gdt_code:     ; CS SHOULD POINT TO THIS
-    dw 0xffff ; Segment limit first 0-15 bits
-    dw 0      ; Base first 0-15 bits
-    db 0      ; Base 16-23 bits
-    db 0x9a   ; Access byte
-    db 11001111b ; High 4 bit flags and the low 4 bit flags
-    db 0        ; Base 24-31 bits
+; TODO! port from real mode lol
+printBios: ; string ptr should be in bx register
+    push bx
+    push ax
+    mov ah, 0x0e
 
-; offset 0x10
-gdt_data:      ; DS, SS, ES, FS, GS
-    dw 0xffff ; Segment limit first 0-15 bits
-    dw 0      ; Base first 0-15 bits
-    db 0      ; Base 16-23 bits
-    db 0x92   ; Access byte
-    db 11001111b ; High 4 bit flags and the low 4 bit flags
-    db 0        ; Base 24-31 bits
+pb_loop:
+    mov al, [bx]
+    cmp al, 0
+    je pb_done
+    int 0x10
+    inc bx
+    jmp pb_loop
 
-gdt_end:
+pb_done:
+    mov al, 0xa ; newline
+    int 0x10
+    mov al, 0xd ; carriage return
+    int 0x10
+    pop ax
+    pop bx
 
-gdt_descriptor:
-    dw gdt_end - gdt_start-1
-    dd gdt_start
- 
- [BITS 32]
- load32:
+    ret
+
+GDT_START:
+    null_descriptor:
+        dd 0
+        dd 0 ; 8 bytes for empty descriptor
+    code_descriptor:
+        dw 0xffff ; first 16 bits of limit (0xfffff)
+
+        dw 0
+        db 0 ; first 24 bits of base (0)
+        ; present, privilige, type, then type flags (1001 1010)
+        db 0b10011010
+        ; last 4 bits of flags and last 4 bits of limit
+        db 0b11001111
+        db 0 ; last 8 bits of base
+    data_descriptor:
+        dw 0xffff ; first 16 bits of limit (0xfffff)
+
+        dw 0
+        db 0 ; first 24 bits of base (0)
+        ; present, privilige, type, then type flags (1001 0010)
+        db 0b10010010
+        ; last 4 bits of flags and last 4 bits of limit
+        db 0b11001111
+        db 0 ; last 8 bits of base
+GDT_END:
+
+GDT_Descriptor:
+    dw GDT_END - GDT_START - 1 ; gdt size
+    dd GDT_START
+
+[bits 32]
+start_protected_mode:
     mov eax, 1
     mov ecx, 100
-    mov edi, 0x0100000
-    call ata_lba_read
-    jmp CODE_SEG:0x0100000
+    mov edi, KERNEL_LOC
+    jmp CODE_SEG:KERNEL_LOC
+
+    cli
+    hlt
+    jmp $
 
 ata_lba_read:
     mov ebx, eax, ; Backup the LBA
@@ -127,5 +161,17 @@ ata_lba_read:
     ; End of reading sectors into memory
     ret
 
-times 510-($ - $$) db 0
-dw 0xAA55
+enteringProtectedMsg:
+    db "Entering protected mode...", 0
+    
+failedToLoadKernelmsg:
+    db "Failed to load kernel...", 0
+
+readingDiskMsg:
+    db "Reading disk...", 0
+
+diskReadErrorMsg:
+    db "Disk read failed!", 0
+
+times 510-($-$$) db 0
+db 0x55, 0xAA
