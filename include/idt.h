@@ -30,10 +30,12 @@ struct idt_entry {
     uint16_t selector;   // kernel segment selector
     uint8_t  zero;       // unused
 
-    uint8_t gate_type   : 4; // Gate type (0xE for 32-bit interrupt gate)
-    uint8_t storage_seg : 1; // Should be 0 for interrupt gates
-    uint8_t dpl         : 2; // Descriptor privilege level (0-3)
-    uint8_t present     : 1; // Is this entry present?
+    // amazing bit field syntax
+
+    uint8_t gate_type   : 4;
+    uint8_t storage_seg : 1;
+    uint8_t dpl         : 2;
+    uint8_t present     : 1;
 
     uint16_t offset_high; // upper 16 bits of handler address
 } __attribute__((packed));
