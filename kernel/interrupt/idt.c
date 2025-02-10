@@ -9,11 +9,13 @@ struct idt_descriptor descriptor;
 
 DECLARE_HW_INT(unimplemented);
 DEFINE_HW_INT(unimplemented, {});
+
 DECLARE_HW_INT(keypress);
 DEFINE_HW_INT(keypress, {
     uint8_t sc = insb(0x60);
     handle_scancode(sc);
 });
+
 DECLARE_HW_INT(timer);
 DEFINE_HW_INT(timer, {
     vga_print("timer hi ");

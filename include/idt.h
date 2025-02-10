@@ -1,29 +1,27 @@
 #include <stdint.h>
 #include <def.h>
 
-// clang-format off
 #define OOS_MAX_INTS 512
 
 enum GATE_TYPE {
     GATE_TYPE_TASK_32 = 0x5,
-    GATE_TYPE_INT_16 = 0x6,
+    GATE_TYPE_INT_16  = 0x6,
     GATE_TYPE_TRAP_16 = 0x7,
-    GATE_TYPE_INT_32 = 0xE,
+    GATE_TYPE_INT_32  = 0xE,
     GATE_TYPE_TRAP_32 = 0xF
 };
+
 // Declare a new hardware interrupt.
-#define DECLARE_HW_INT(name)     \
-    void name##_ihandler();      \
+#define DECLARE_HW_INT(name) \
+    void        name##_ihandler(); \
     extern void name##_iasm();
 
 // Implement the new hardware interrupt.
-#define DEFINE_HW_INT(name, code)  \
-    void name##_ihandler() {       \
-        code                       \
-        outb(0x20, 0x20);          \
+#define DEFINE_HW_INT(name, code) \
+    void name##_ihandler() \
+    { \
+        code outb(0x20, 0x20); \
     }
-
-// clang-format on
 
 struct idt_entry {
     uint16_t offset_low; // lower 16 bits of handler address
@@ -31,7 +29,6 @@ struct idt_entry {
     uint8_t  zero;       // unused
 
     // amazing bit field syntax
-
     uint8_t gate_type   : 4;
     uint8_t storage_seg : 1;
     uint8_t dpl         : 2;
