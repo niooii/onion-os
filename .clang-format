@@ -1,0 +1,31 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: false
+  AfterClass: false
+  AfterStruct: false
+  AfterEnum: false
+  AfterNamespace: false
+IndentWidth: 4
+IndentPPDirectives: None
+AlignEscapedNewlines: DontAlign
+PointerAlignment: Left
+AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+BitFieldColonSpacing: Both
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+
+AlignStructBegin: true
+PackConstructorInitializers: NextLine
+
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+
+AlignConsecutiveBitFields: true
+
+QualifierAlignment: Left
+SeparateDefinitionBlocks: Always

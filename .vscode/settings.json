@@ -4,7 +4,6 @@
     "terminal.integrated.shell.windows": "c:/Program Files/PowerShell/7/pwsh.exe",
     "workbench.statusBar.visible": true,
     "editor.lineNumbers": "on",
-    "C_Cpp.clang_format_style": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0, NamespaceIndentation: All}",
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "newLine",
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "newLine",
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "newLine",
@@ -28,5 +27,14 @@
         "mem.h": "c",
         "keyboard.h": "c"
     },
-    "nasm.outputFormat": "elf32"
+    "nasm.outputFormat": "elf32",
+    // formatting
+    "C_Cpp.clang_format_style": "file",
+    "editor.formatOnSave": true,
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    }
 }
