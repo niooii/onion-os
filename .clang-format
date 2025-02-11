@@ -7,6 +7,8 @@ BraceWrapping:
   AfterStruct: false
   AfterEnum: false
   AfterNamespace: false
+  AfterCStyleCastInInitializerList: true
+  BeforeArrayBrace: true
 IndentWidth: 4
 IndentPPDirectives: None
 AlignEscapedNewlines: DontAlign
@@ -15,6 +17,11 @@ AlignConsecutiveMacros: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 BitFieldColonSpacing: Both
+
+BinPackOperands: false
+BreakBeforeTernaryOperators: false
+AllowShortTernaryOperationsOnASingleLine: true
+ColumnLimit: 100  
 
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1

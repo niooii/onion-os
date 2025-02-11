@@ -1,6 +1,8 @@
+#pragma once
+
 #include <def.h>
 
-uchar insb(ushort port);
+uchar  insb(ushort port);
 ushort insw(ushort port);
 
 void outb(ushort port, uchar val);

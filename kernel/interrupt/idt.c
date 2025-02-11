@@ -17,10 +17,7 @@ DEFINE_HW_INT(keypress, {
 });
 
 DECLARE_HW_INT(timer);
-DEFINE_HW_INT(timer, {
-    // vga_print("timer hi ");
-    // a
-});
+DEFINE_HW_INT(timer, {});
 
 // TODO!
 uint8_t mk_type_attr_int(enum GATE_TYPE gate_type)
