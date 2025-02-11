@@ -4,7 +4,7 @@
 
 // just PS2 scan code set 1 for now
 
-enum SPECIAL_KEYS {
+enum SPECIAL_KEY {
     KEY_NONE = 0,
     // Modifier keys
     KEY_LCTRL = 0x100,

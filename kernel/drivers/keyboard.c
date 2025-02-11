@@ -187,7 +187,7 @@ const unsigned char sc_to_ascii_shift[] = {
     0x00  // 0x58 - F12
 };
 
-const unsigned short scancode_to_special[] = {
+const uint16_t sc_to_special[] = {
     [0x00] = KEY_NONE,        // Empty
     [0x1D] = KEY_LCTRL,       // Left Control
     [0x2A] = KEY_LSHIFT,      // Left Shift
@@ -240,15 +240,33 @@ static struct {
     bool scroll_lock;
 } modifiers;
 
+// If it returns 0, then it is a modifier/special key
+char to_ascii(uint8_t sc)
+{
+}
+
 void handle_scancode(uint8_t sc)
 {
     bool    is_brk = sc & 0x80;
     uint8_t mk     = sc & 0x7F;
 
+    // quick check for modifiers first
+    enum SPECIAL_KEY sk = sc_to_special[sc];
+    if (sk != 0) {
+        switch (sk) {
+        case KEY_LSHIFT:
+            modifiers.shift_left = true;
+        default:
+            // unhandled
+        }
+
+        return;
+    }
+
     // TODO! how am i gonna handle caps lock man
     char ascii =
         (modifiers.shift_left || modifiers.shift_right) ? sc_to_ascii_shift[mk] : sc_to_ascii[mk];
-    // lazy handling for now. its 4:11 am on a school night.
+
     if (ascii != 0 && !is_brk) {
         vga_putchar(ascii);
     }
