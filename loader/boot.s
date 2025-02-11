@@ -1,4 +1,4 @@
-[org 0x7c00]
+ORG 0x7c00
 BITS 16
 
 KERNEL_LOC equ 0x100000

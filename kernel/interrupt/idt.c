@@ -18,7 +18,7 @@ DEFINE_HW_INT(keypress, {
 
 DECLARE_HW_INT(timer);
 DEFINE_HW_INT(timer, {
-    vga_print("timer hi ");
+    // vga_print("timer hi ");
     // a
 });
 
