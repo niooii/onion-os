@@ -33,6 +33,8 @@ or eax, 1
 mov cr0, eax
 jmp CODE_SEG:start_protected_mode
 
+mov ax, 0x7e00
+
 ; TODO! port from real mode lol
 printBios: ; string ptr should be in bx register
     push bx
