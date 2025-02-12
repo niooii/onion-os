@@ -23,7 +23,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 run: $(BUILD_DIR)/os.bin
-	qemu-system-x86_64 -hda $<
+	qemu-system-i386 -hda $<
 
 debug: $(BUILD_DIR)/os.bin
 	gdb -x debug.gdb

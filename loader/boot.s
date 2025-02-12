@@ -26,14 +26,32 @@ mov sp, bp
 mov ah, 0x0
 mov al, 0x3
 int 0x10
+
+; TODO! read sector to location of stage2
+mov ah, 0x2 ; command - read from drive
+; apparently its set to the drive pc was booted from when system starts
+; mov dl, 0x80 ; drive - 0x80 is first hda
+mov al, 4, ; sectors to read
+mov ch, 0, ; from cylinder 0
+mov cl, 2 ; sector 2
+mov dh, 0, ; head
+; es is 0.
+mov bx, stage2 ; load to address of stage2
+int 0x13
+
+jmp stage2
+
+; boot header
+times 510-($-$$) db 0
+db 0x55, 0xAA
+
+stage2:
 ; protected mode stuff
 lgdt [GDT_Descriptor]
 mov eax, cr0
 or eax, 1
 mov cr0, eax
 jmp CODE_SEG:start_protected_mode
-
-mov ax, 0x7e00
 
 ; TODO! port from real mode lol
 printBios: ; string ptr should be in bx register
@@ -91,6 +109,7 @@ GDT_Descriptor:
 
 [bits 32]
 start_protected_mode:
+    hlt
     mov eax, 1
     mov ecx, 100
     mov edi, KERNEL_LOC
@@ -146,6 +165,3 @@ ata_lba_read:
     pop ecx
     loop .next_sector
     ret
-
-times 510-($-$$) db 0
-db 0x55, 0xAA
