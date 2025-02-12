@@ -31,7 +31,7 @@ int 0x10
 mov ah, 0x2 ; command - read from drive
 ; apparently its set to the drive pc was booted from when system starts
 ; mov dl, 0x80 ; drive - 0x80 is first hda
-mov al, 4, ; sectors to read
+mov al, 8, ; sectors to read
 mov ch, 0, ; from cylinder 0
 mov cl, 2 ; sector 2
 mov dh, 0, ; head
@@ -109,8 +109,8 @@ GDT_Descriptor:
 
 [bits 32]
 start_protected_mode:
-    hlt
-    mov eax, 1
+    ; start reading from the second logical block addr
+    mov eax, 2
     mov ecx, 100
     mov edi, KERNEL_LOC
     call ata_lba_read
@@ -165,3 +165,7 @@ ata_lba_read:
     pop ecx
     loop .next_sector
     ret
+
+; sector alignment
+; MEGA BANDAID FIX somehow align this to 512 bytes
+times (512 * 2)-($-$$) db 0
