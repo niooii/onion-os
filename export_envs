@@ -1,2 +1,3 @@
 PREFIX="/usr/local/i386elfcc"
+export TOOLCHAIN_DIR=/usr/local/i386elfcc/bin
 export PATH="$PATH:$PREFIX/bin/"

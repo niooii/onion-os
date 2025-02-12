@@ -229,20 +229,21 @@ const uint16_t sc_to_special[] = {
 };
 
 static struct {
-    bool shift_left;
-    bool shift_right;
-    bool ctrl_left;
-    bool ctrl_right;
-    bool alt_left;
-    bool alt_right;
+    bool lshift;
+    bool rshift;
+    bool lctrl;
+    bool rctrl;
+    bool lalt;
+    bool ralt;
     bool caps_lock;
     bool num_lock;
     bool scroll_lock;
 } modifiers;
 
 // If it returns 0, then it is a modifier/special key
-char to_ascii(uint8_t sc)
+char to_ascii(uint8_t mk)
 {
+    return (modifiers.lshift || modifiers.rshift) ? sc_to_ascii_shift[mk] : sc_to_ascii[mk];
 }
 
 void handle_scancode(uint8_t sc)
@@ -251,23 +252,60 @@ void handle_scancode(uint8_t sc)
     uint8_t mk     = sc & 0x7F;
 
     // quick check for modifiers first
-    enum SPECIAL_KEY sk = sc_to_special[sc];
+    enum SPECIAL_KEY sk = sc_to_special[mk];
     if (sk != 0) {
+        // modifier?
         switch (sk) {
         case KEY_LSHIFT:
-            modifiers.shift_left = true;
+            modifiers.lshift = !is_brk;
+            return;
+        case KEY_RSHIFT:
+            modifiers.rshift = !is_brk;
+            return;
+        case KEY_LCTRL:
+            modifiers.lctrl = !is_brk;
+            return;
+        case KEY_RCTRL:
+            modifiers.rctrl = !is_brk;
+            return;
+        case KEY_LALT:
+            modifiers.lalt = !is_brk;
+            return;
+        case KEY_RALT:
+            modifiers.ralt = !is_brk;
+            return;
         default:
             // unhandled
+        }
+
+        // toggles?
+        if (!is_brk) {
+            switch (sk) {
+            // these ones r toggles
+            case KEY_CAPS_LOCK:
+                modifiers.caps_lock = !modifiers.caps_lock;
+                break;
+            case KEY_NUM_LOCK:
+                modifiers.num_lock = !modifiers.num_lock;
+                break;
+            case KEY_SCROLL_LOCK:
+                modifiers.scroll_lock = !modifiers.scroll_lock;
+                break;
+            default:
+                // unhandled
+            }
         }
 
         return;
     }
 
-    // TODO! how am i gonna handle caps lock man
-    char ascii =
-        (modifiers.shift_left || modifiers.shift_right) ? sc_to_ascii_shift[mk] : sc_to_ascii[mk];
-
-    if (ascii != 0 && !is_brk) {
-        vga_putchar(ascii);
+    if (is_brk) {
+        // set some state idk
+        return;
     }
+
+    char ascii = to_ascii(mk);
+
+    // TODO! events system
+    vga_putchar(ascii);
 }

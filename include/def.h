@@ -4,7 +4,7 @@
 typedef unsigned int   size_t;
 typedef unsigned char  uchar;
 typedef unsigned short ushort;
-#define bool  char
+#define bool  uint8_t
 #define true  1
 #define false 0
 
