@@ -1,7 +1,5 @@
 [BITS 32]
 
-section .text.entryasm
-
 extern kernel_main
 CODE_SEG equ 0x8 
 DATA_SEG equ 0x10 

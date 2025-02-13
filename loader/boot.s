@@ -45,6 +45,13 @@ jmp stage2
 times 510-($-$$) db 0
 db 0x55, 0xAA
 
+; we need to calculate where stage2 ends so we can start reading from hte correct sector
+; when loading the kernel.
+STAGE2_SIZE equ (stage2_end - stage2)
+; rounded up integer division to calc how many sectors stage2 takes up
+STAGE2_SECTORS equ (STAGE2_SIZE + 512 - 1) / 512
+KERNEL_START_SECTOR equ STAGE2_SECTORS + 1
+
 stage2:
 ; protected mode stuff
 lgdt [GDT_Descriptor]
@@ -109,8 +116,7 @@ GDT_Descriptor:
 
 [bits 32]
 start_protected_mode:
-    ; start reading from the second logical block addr
-    mov eax, 2
+    mov eax, KERNEL_START_SECTOR
     mov ecx, 100
     mov edi, KERNEL_LOC
     call ata_lba_read
@@ -166,6 +172,6 @@ ata_lba_read:
     loop .next_sector
     ret
 
-; sector alignment
-; MEGA BANDAID FIX somehow align this to 512 bytes
-times (512 * 2)-($-$$) db 0
+stage2_end:
+
+align 512

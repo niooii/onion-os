@@ -4,7 +4,8 @@
 #include <io.h>
 
 extern void div_zero();
-void kernel_main() 
+
+void kernel_main()
 {
     vga_print("Hello world..");
 
@@ -12,5 +13,6 @@ void kernel_main()
 
     idt_load();
 
-    while (1);
+    while (1) {
+    }
 }

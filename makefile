@@ -1,4 +1,6 @@
 BUILD_DIR = build
+LD = $(TOOLCHAIN_DIR)/i686-elf-ld
+LDFLAGS = -static -T kernel/linker.ld -nostdlib
 
 .PHONY: all clean run debug loader kernel
 
@@ -16,10 +18,13 @@ loader:
 
 kernel:
 	$(MAKE) -C kernel
+	# $(MAKE) -C rs-kernel
+	$(LD) $(LDFLAGS) $(BUILD_DIR)/kernel.o -o $(BUILD_DIR)/kernel.bin
 
 clean:
 	$(MAKE) -C loader clean
 	$(MAKE) -C kernel clean
+	# $(MAKE) -C rust clean
 	rm -rf $(BUILD_DIR)
 
 run: $(BUILD_DIR)/os.bin

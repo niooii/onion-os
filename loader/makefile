@@ -2,7 +2,7 @@
 
 # ASM = nasm
 # ASMFLAGS = -f elf -g
-# LD = $(TOOLCHAIN_DIR)/i386-elf-ld
+# LD = $(TOOLCHAIN_DIR)/i686-elf-ld
 # LDFLAGS = -T linker.ld -nostdlib
 
 # # Source files
