@@ -9,7 +9,23 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "clang-x64",
+            "compilerArgs": [
+                "-ffreestanding",
+                "-falign-jumps",
+                "-falign-functions",
+                "-falign-labels",
+                "-falign-loops",
+                "-fstrength-reduce",
+                "-finline-functions",
+                "-fno-builtin",
+                "-nostdlib",
+                "-nostartfiles",
+                "-nodefaultlibs",
+                "-m32",
+                "-march=i686",
+                "-mno-red-zone"
+            ]
         }
     ],
     "version": 4

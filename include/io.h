@@ -2,8 +2,8 @@
 
 #include <def.h>
 
-uchar  insb(ushort port);
-ushort insw(ushort port);
+u8  inb(u16 port);
+u16 inw(u16 port);
 
-void outb(ushort port, uchar val);
-void outw(ushort port, ushort val);
+void outb(u16 port, u8 val);
+void outw(u16 port, u16 val);

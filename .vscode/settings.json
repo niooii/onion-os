@@ -10,6 +10,19 @@
     "C_Cpp.vcFormat.space.pointerReferenceAlignment": "left",
     "C_Cpp.clang_format_sortIncludes": false,
     "C_Cpp.vcFormat.indent.namespaceContents": true,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "entity.name.type",
+                    "entity.name.type.typedef"
+                ],
+                "settings": {
+                    "foreground": "#C6A0F6"
+                }
+            }
+        ]
+    },
     "window.zoomLevel": 0,
     "editor.tabCompletion": "on",
     "todohighlight.isEnable": true,
@@ -25,7 +38,11 @@
         "typeinfo": "c",
         "random": "c",
         "mem.h": "c",
-        "keyboard.h": "c"
+        "keyboard.h": "c",
+        "def.h": "c",
+        "stdint.h": "c",
+        "sstream": "c",
+        "regex": "c"
     },
     "nasm.outputFormat": "elf32",
     // formatting

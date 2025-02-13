@@ -14,7 +14,9 @@ entry:
     mov es, ax
     mov fs, ax
     mov gs, ax
+
     mov ebp, 0x90000
+    and ebp, 0xFFFFFFF0
     mov esp, ebp
 
     ; fast a20 gate thing
@@ -36,5 +38,4 @@ entry:
 
     jmp $
 
-; stupid alignment issues
 times 512-($ - $$) db 0

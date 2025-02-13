@@ -1,11 +1,11 @@
 section .text
 
-global insb
-global insw
+global inb
+global inw
 global outb
 global outw
 
-insb:
+inb:
     push ebp
     mov ebp, esp
 
@@ -16,7 +16,7 @@ insb:
     pop ebp
     ret
 
-insw:
+inw:
     push ebp
     mov ebp, esp
     

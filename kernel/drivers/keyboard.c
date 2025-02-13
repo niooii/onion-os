@@ -4,7 +4,7 @@
 // THANK YOU genai
 const unsigned char sc_to_ascii[] = {
     0x00, // 0x00 - Empty
-    0x1B, // 0x01 - ESC
+    0x00, // 0x01 - ESC
     '1',  // 0x02
     '2',  // 0x03
     '3',  // 0x04
@@ -17,8 +17,8 @@ const unsigned char sc_to_ascii[] = {
     '0',  // 0x0B
     '-',  // 0x0C
     '=',  // 0x0D
-    0x08, // 0x0E - Backspace
-    '\t', // 0x0F - Tab
+    0x00, // 0x0E - Backspace
+    0x00, // 0x0F - Tab
     'q',  // 0x10
     'w',  // 0x11
     'e',  // 0x12
@@ -31,7 +31,7 @@ const unsigned char sc_to_ascii[] = {
     'p',  // 0x19
     '[',  // 0x1A
     ']',  // 0x1B
-    '\n', // 0x1C - Enter
+    0x00, // 0x1C - Enter
     0x00, // 0x1D - Left Control
     'a',  // 0x1E
     's',  // 0x1F
@@ -97,7 +97,7 @@ const unsigned char sc_to_ascii[] = {
 // Shifted keys lookup table
 const unsigned char sc_to_ascii_shift[] = {
     0x00, // 0x00 - Empty
-    0x1B, // 0x01 - ESC
+    0x00, // 0x01 - ESC
     '!',  // 0x02
     '@',  // 0x03
     '#',  // 0x04
@@ -110,7 +110,7 @@ const unsigned char sc_to_ascii_shift[] = {
     ')',  // 0x0B
     '_',  // 0x0C
     '+',  // 0x0D
-    0x08, // 0x0E - Backspace
+    0x00, // 0x0E - Backspace
     '\t', // 0x0F - Tab
     'Q',  // 0x10
     'W',  // 0x11
@@ -124,7 +124,7 @@ const unsigned char sc_to_ascii_shift[] = {
     'P',  // 0x19
     '{',  // 0x1A
     '}',  // 0x1B
-    '\n', // 0x1C - Enter
+    0x00, // 0x1C - Enter
     0x00, // 0x1D - Left Control
     'A',  // 0x1E
     'S',  // 0x1F
@@ -188,44 +188,50 @@ const unsigned char sc_to_ascii_shift[] = {
 };
 
 const uint16_t sc_to_special[] = {
-    [0x00] = KEY_NONE,        // Empty
-    [0x1D] = KEY_LCTRL,       // Left Control
-    [0x2A] = KEY_LSHIFT,      // Left Shift
-    [0x36] = KEY_RSHIFT,      // Right Shift
-    [0x38] = KEY_LALT,        // Left Alt
-    [0x3A] = KEY_CAPS_LOCK,   // Caps Lock
-    [0x45] = KEY_NUM_LOCK,    // Num Lock
-    [0x46] = KEY_SCROLL_LOCK, // Scroll Lock
+    [0x00] = SK_NONE,        // Empty
+    [0x1D] = SK_LCTRL,       // Left Control
+    [0x2A] = SK_LSHIFT,      // Left Shift
+    [0x36] = SK_RSHIFT,      // Right Shift
+    [0x38] = SK_LALT,        // Left Alt
+    [0x3A] = SK_CAPS_LOCK,   // Caps Lock
+    [0x45] = SK_NUM_LOCK,    // Num Lock
+    [0x46] = SK_SCROLL_LOCK, // Scroll Lock
 
     // Function keys
-    [0x3B] = KEY_F1,  // F1
-    [0x3C] = KEY_F2,  // F2
-    [0x3D] = KEY_F3,  // F3
-    [0x3E] = KEY_F4,  // F4
-    [0x3F] = KEY_F5,  // F5
-    [0x40] = KEY_F6,  // F6
-    [0x41] = KEY_F7,  // F7
-    [0x42] = KEY_F8,  // F8
-    [0x43] = KEY_F9,  // F9
-    [0x44] = KEY_F10, // F10
-    [0x57] = KEY_F11, // F11
-    [0x58] = KEY_F12, // F12
+    [0x3B] = SK_F1,  // F1
+    [0x3C] = SK_F2,  // F2
+    [0x3D] = SK_F3,  // F3
+    [0x3E] = SK_F4,  // F4
+    [0x3F] = SK_F5,  // F5
+    [0x40] = SK_F6,  // F6
+    [0x41] = SK_F7,  // F7
+    [0x42] = SK_F8,  // F8
+    [0x43] = SK_F9,  // F9
+    [0x44] = SK_F10, // F10
+    [0x57] = SK_F11, // F11
+    [0x58] = SK_F12, // F12
+
+    // Control keys
+    [0x01] = SK_ESCAPE,
+    [0x0E] = SK_BACKSPACE,
+    [0x0F] = SK_TAB,
+    [0x1C] = SK_ENTER,
 
     // Extended scancodes (E0 prefix)
     // TODO! if byte recieved from 0x60 is 0xE0, then wait for the next byte to
     // be sent (for the extended keys)
-    [0xE0 | 0x1D] = KEY_RCTRL,     // Right Control
-    [0xE0 | 0x38] = KEY_RALT,      // Right Alt
-    [0xE0 | 0x47] = KEY_HOME,      // Home
-    [0xE0 | 0x48] = KEY_UP,        // Up Arrow
-    [0xE0 | 0x49] = KEY_PAGE_UP,   // Page Up
-    [0xE0 | 0x4B] = KEY_LEFT,      // Left Arrow
-    [0xE0 | 0x4D] = KEY_RIGHT,     // Right Arrow
-    [0xE0 | 0x4F] = KEY_END,       // End
-    [0xE0 | 0x50] = KEY_DOWN,      // Down Arrow
-    [0xE0 | 0x51] = KEY_PAGE_DOWN, // Page Down
-    [0xE0 | 0x52] = KEY_INSERT,    // Insert
-    [0xE0 | 0x53] = KEY_DELETE     // Delete
+    [0xE0 | 0x1D] = SK_RCTRL,     // Right Control
+    [0xE0 | 0x38] = SK_RALT,      // Right Alt
+    [0xE0 | 0x47] = SK_HOME,      // Home
+    [0xE0 | 0x48] = SK_UP,        // Up Arrow
+    [0xE0 | 0x49] = SK_PAGE_UP,   // Page Up
+    [0xE0 | 0x4B] = SK_LEFT,      // Left Arrow
+    [0xE0 | 0x4D] = SK_RIGHT,     // Right Arrow
+    [0xE0 | 0x4F] = SK_END,       // End
+    [0xE0 | 0x50] = SK_DOWN,      // Down Arrow
+    [0xE0 | 0x51] = SK_PAGE_DOWN, // Page Down
+    [0xE0 | 0x52] = SK_INSERT,    // Insert
+    [0xE0 | 0x53] = SK_DELETE     // Delete
 };
 
 static struct {
@@ -253,42 +259,59 @@ void handle_scancode(uint8_t sc)
 
     // quick check for modifiers first
     enum SPECIAL_KEY sk = sc_to_special[mk];
+    // THIS is all temp btw
+    // move to more user space type stuff later
     if (sk != 0) {
         // modifier?
         switch (sk) {
-        case KEY_LSHIFT:
+        case SK_LSHIFT:
             modifiers.lshift = !is_brk;
             return;
-        case KEY_RSHIFT:
+        case SK_RSHIFT:
             modifiers.rshift = !is_brk;
             return;
-        case KEY_LCTRL:
+        case SK_LCTRL:
             modifiers.lctrl = !is_brk;
             return;
-        case KEY_RCTRL:
+        case SK_RCTRL:
             modifiers.rctrl = !is_brk;
             return;
-        case KEY_LALT:
+        case SK_LALT:
             modifiers.lalt = !is_brk;
             return;
-        case KEY_RALT:
+        case SK_RALT:
             modifiers.ralt = !is_brk;
             return;
         default:
             // unhandled
         }
 
-        // toggles?
         if (!is_brk) {
+            // control?
             switch (sk) {
-            // these ones r toggles
-            case KEY_CAPS_LOCK:
+            case SK_TAB:
+                vga_print("    ");
+                return;
+            case SK_ENTER:
+                return;
+            case SK_ESCAPE:
+                return;
+            case SK_BACKSPACE:
+                vga_delchar();
+                return;
+            default:
+                // unhandled
+            }
+
+            // toggles?
+            switch (sk) {
+            case SK_CAPS_LOCK:
                 modifiers.caps_lock = !modifiers.caps_lock;
                 break;
-            case KEY_NUM_LOCK:
+            case SK_NUM_LOCK:
                 modifiers.num_lock = !modifiers.num_lock;
                 break;
-            case KEY_SCROLL_LOCK:
+            case SK_SCROLL_LOCK:
                 modifiers.scroll_lock = !modifiers.scroll_lock;
                 break;
             default:

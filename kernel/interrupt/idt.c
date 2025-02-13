@@ -1,5 +1,5 @@
 #include <idt.h>
-#include <mem.h>
+#include <mm/mem.h>
 #include <drivers/vga.h>
 #include <drivers/keyboard.h>
 #include <io.h>
@@ -12,7 +12,7 @@ DEFINE_HW_INT(unimplemented, {});
 
 DECLARE_HW_INT(keypress);
 DEFINE_HW_INT(keypress, {
-    uint8_t sc = insb(0x60);
+    uint8_t sc = inb(0x60);
     handle_scancode(sc);
 });
 
