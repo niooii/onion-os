@@ -20,6 +20,7 @@ kernel:
 	$(MAKE) -C kernel
 	# $(MAKE) -C rust
 	# $(LD) $(LDFLAGS) $(BUILD_DIR)/kernel.o $(BUILD_DIR)/liboos_kernel.a -o $(BUILD_DIR)/kernel.bin
+
 	$(LD) $(LDFLAGS) $(BUILD_DIR)/kernel.o -o $(BUILD_DIR)/kernel.bin
 
 clean:

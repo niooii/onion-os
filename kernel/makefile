@@ -50,7 +50,7 @@ all: $(BUILD_DIR)/kernel.o
 
 $(BUILD_DIR)/kernel.o: $(ALL_OBJS) linker.ld
 	@mkdir -p $(BUILD_DIR)
-	$(LD) -g -relocatable $(ALL_OBJS) -o $(BUILD_DIR)/kernel.o
+	$(LD) -static -g -relocatable $(ALL_OBJS) ../build/liboos_kernel.a -o $(BUILD_DIR)/kernel.o
 
 $(BUILD_DIR)/$(TARGET)/%.o: %.c
 	@mkdir -p $(dir $@)
