@@ -8,11 +8,11 @@ build-std-features = ["compiler-builtins-mem"]
 [target.i686]
 rustflags = [
     "-C",
-    "no-redzone=yes",          # -mno-red-zone
+    "no-redzone=yes",           # -mno-red-zone
     "-C",
-    "code-model=kernel",       # wow chat
+    "code-model=kernel",        # wow chat
     "-C",
-    "relocation-model=static", # static linking
+    "relocation-model=static",  # static linking
     "-C",
     "link-arg=-nostdlib",
     "-C",
@@ -26,7 +26,38 @@ rustflags = [
     "-C",
     "link-arg=-m32",
     "-C",
-    "debuginfo=2",     # full debug info
+    "debuginfo=2",              # full debug info
     "-C",
-    "force-frame-pointers=yes",    # -fomit-frame-pointer
+    "force-frame-pointers=yes", # -fomit-frame-pointer
+    # Warnings and errors
+    "-D",
+    "improper_ctypes",
+    "-D",
+    "improper_ctypes_definitions",
+    "-D",
+    "clippy::all",
+    "-W",
+    "clippy::pedantic",
+    "-W",
+    "clippy::cargo",
+    "-A",
+    "unused_variables",
+    "-A",
+    "clippy::missing_safety_doc",
+    "-A",
+    "clippy::module_name_repetitions",
+    "-A",
+    "clippy::zero_ptr",
+    "-A",
+    "missing_docs",
+    "-A",
+    "clippy::cast_possible_truncation",
+    "-A",
+    "clippy::empty_loop",
+    "-A",
+    "clippy::cast_sign_loss",
+    "-W",
+    "clippy::inline_asm_x86_att_syntax",
+    "-D",
+    "clippy::unwrap_used",
 ]

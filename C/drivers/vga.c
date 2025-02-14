@@ -9,9 +9,15 @@ static inline void set_cpos_current()
     vga_cpos(offset % VGA_WIDTH, offset / VGA_WIDTH);
 }
 
+void vga_clear()
+{
+    for (usize i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+        cpos[i] = 0x0;
+    }
+}
+
 void vga_print(const char* str)
 {
-    cpos   = (u16*)0xB8000;
     u8 col = 0x0f;
     while (*str) {
         *cpos++ = (col << 8 | (*str++));
@@ -21,7 +27,6 @@ void vga_print(const char* str)
 
 void vga_putchar(const char c)
 {
-    cpos    = (u16*)0xB8000;
     u8 col  = 0x0f;
     *cpos++ = (col << 8) | c;
     set_cpos_current();

@@ -9,6 +9,7 @@ void vga_print(const char* str);
 void vga_putchar(const char c);
 void vga_delchar();
 
+void vga_clear();
 // Activate or deactivate the blinking cursor.
 void vga_cset(bool active);
 // Set the cursor's position.

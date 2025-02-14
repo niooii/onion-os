@@ -117,7 +117,7 @@ GDT_Descriptor:
 [bits 32]
 start_protected_mode:
     mov eax, KERNEL_START_SECTOR
-    mov ecx, 100
+    mov ecx, 50000
     mov edi, KERNEL_LOC
     call ata_lba_read
     jmp CODE_SEG:KERNEL_LOC
