@@ -61,7 +61,6 @@ void idt_init()
 
 void idt_load()
 {
-    ASM("cli");
     ASM("lidt %0" : : "m"(descriptor));
     ASM("sti");
 }

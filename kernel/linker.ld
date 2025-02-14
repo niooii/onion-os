@@ -1,8 +1,7 @@
-ENTRY(entry)
-OUTPUT_FORMAT(binary)
 SECTIONS
 {
     . = 1M;
+
     .text : ALIGN(4096) {
         *(.text)
     }
@@ -13,9 +12,10 @@ SECTIONS
 
     .data : ALIGN(4096) {
         *(.data)
+        *(.data.*)
     }
 
-    .bss : ALIGN(4096) {
+    .bss (NOLOAD) : ALIGN(4096) {
         *(COMMON)
         *(.bss)
     }

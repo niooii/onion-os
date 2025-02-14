@@ -1,12 +1,14 @@
 [BITS 32]
 
-extern kernel_main
+extern k_centry
 CODE_SEG equ 0x8 
 DATA_SEG equ 0x10 
 
 global entry
 
 entry:
+    cli
+    
     ; setup segments and the stack
     mov ax, DATA_SEG
     mov ds, ax
@@ -33,8 +35,7 @@ entry:
     mov al, 00000001b
     out 0x21, al
 
-    sti
-    call kernel_main
+    call k_centry
 
     jmp $
 

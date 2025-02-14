@@ -1,0 +1,30 @@
+[package]
+name = "oos_kernel"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"] 
+path = "src/kmain.rs"
+
+[profile.dev]
+panic = "abort" # no stack unwinding on panic
+debug = true    # like -g in gcc
+opt-level = 0   # no optimization (like -O0)
+
+[profile.release]
+opt-level = 2     # opt-level 3 is max but can be unpredictable
+lto = "thin"      # link time optimization - faster compile without many performance hits
+codegen-units = 1 # max optimization (treat as single unit)
+
+debug = true
+debug-assertions = false
+overflow-checks = true 
+
+strip = false       # keep symbols for debugging
+panic = "abort"
+incremental = false # consistent builds every time
+
+rpath = false # dynamic paths dont need to be resolved in kernelspace
+
+[dependencies]
