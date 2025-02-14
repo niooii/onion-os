@@ -18,12 +18,13 @@ extern "C" {
 extern "C" {
     fn idt_load();
     fn idt_init();
-    fn vga_print(s: &str);
+    fn vga_print(s: &[u8]);
 }
 
 #[no_mangle]
 pub extern "C" fn kernel_main() -> ! {
     unsafe {
+        vga_print(b"hey man TESTING!!\0");
         *(0xb8000 as *mut u8) = 65; // ASCII for 'A'
         *(0xb8001 as *mut u8) = 0x0F;
     }
