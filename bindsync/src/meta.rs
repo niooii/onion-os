@@ -19,10 +19,9 @@ pub struct Metadata {
     pub change: ChangeKind,
 }
 
-#[derive(Deserialize, Serialize)]
-#[serde(transparent)]
 pub struct FileTracker {
     map: HashMap<PathBuf, Metadata>,
+    files_root: PathBuf,
 }
 
 #[derive(PartialEq, Eq, Deserialize, Serialize)]
@@ -60,21 +59,29 @@ impl FileTracker {
 
     /// Returns one if it exists, creates a new one if it doesn't.
     /// Despite the name, most of the actual processing is done here.
-    pub fn read(files_dir: &Path, save_name: &str) -> Result<Self> {
+    pub fn read(files_root: &Path, save_name: &str) -> Result<Self> {
         let path = Self::save_name_to_path(save_name);
 
-        let mut mm: FileTracker =
-            { serde_json::from_str(&std::fs::read_to_string(path).unwrap_or("{}".into()))? };
+        let mut mm: FileTracker = FileTracker {
+            map: serde_json::from_str(&std::fs::read_to_string(path).unwrap_or("{}".into()))?,
+            files_root: files_root.into(),
+        };
 
-        std::fs::create_dir_all(files_dir)?;
+        mm.update()?;
 
-        for entry in WalkDir::new(files_dir) {
+        Ok(mm)
+    }
+
+    pub fn update(&mut self) -> Result<()> {
+        std::fs::create_dir_all(&self.files_root)?;
+
+        for entry in WalkDir::new(&self.files_root) {
             let e = entry.expect("Couldn't read file");
             if e.file_type().is_dir() {
                 continue;
             }
 
-            if let Some(stored_meta) = mm.get_meta(e.path()) {
+            if let Some(stored_meta) = self.get_meta(e.path()) {
                 let hash = Self::hash(e.path())?;
                 if hash == stored_meta.hash {
                     stored_meta.change = ChangeKind::Same;
@@ -85,24 +92,21 @@ impl FileTracker {
             } else {
                 let hash = Self::hash(e.path())?;
 
-                mm.map.insert(
-                    e.path().to_path_buf(),
-                    Metadata {
-                        hash,
-                        change: ChangeKind::Created,
-                    },
-                );
+                self.map.insert(e.path().to_path_buf(), Metadata {
+                    hash,
+                    change: ChangeKind::Created,
+                });
             }
         }
 
-        Ok(mm)
+        Ok(())
     }
 
     pub fn save(&mut self, save_name: &str) -> Result<()> {
         let path = Self::save_name_to_path(save_name);
-        std::fs::create_dir_all(path.parent().expect("Root???"))?;
+        std::fs::create_dir_all(path.parent().unwrap_or(Path::new("/")))?;
         self.map.retain(|p, m| m.change != ChangeKind::Deleted);
-        std::fs::write(&path, serde_json::to_string(&self)?)?;
+        std::fs::write(&path, serde_json::to_string(&self.map)?)?;
         Ok(())
     }
 

@@ -8,7 +8,6 @@ use std::{
 };
 
 use anyhow::Result;
-use cbinds::CBindings;
 use walkdir::WalkDir;
 
 use lazy_static::lazy_static;
