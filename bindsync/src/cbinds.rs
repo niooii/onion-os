@@ -36,6 +36,7 @@ fn gen_binds(include: &Path) -> Result<PathBuf> {
         .default_enum_style(EnumVariation::Rust {
             non_exhaustive: false,
         })
+        .allowlist_function(".*")
         .use_core()
         .generate()?;
 

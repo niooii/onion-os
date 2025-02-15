@@ -5,7 +5,6 @@ void cinit()
 {
     vga_clear();
     vga_cset(true);
-    vga_print("Hello world..");
 
     idt_init();
     idt_load();

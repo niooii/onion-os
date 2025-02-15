@@ -5,16 +5,6 @@
 
 typedef uint8_t bool;
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t  i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
 typedef size_t usize;
 
 #define true  1
@@ -23,3 +13,7 @@ typedef size_t usize;
 #define ASM           __asm__ volatile
 #define CODE_SELECTOR 0x8
 #define DATA_SELECTOR 0x10
+
+struct test_thing {
+    int field;
+};

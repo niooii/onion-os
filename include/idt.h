@@ -44,6 +44,8 @@ struct idt_descriptor {
     uint32_t base;  // base address of IDT
 } __attribute__((packed));
 
+void do_thing(struct test_thing t);
+
 void idt_set(int i, void* addr);
 void idt_init();
 void idt_load();

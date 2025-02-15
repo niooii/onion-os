@@ -13,4 +13,4 @@ void vga_clear();
 // Activate or deactivate the blinking cursor.
 void vga_cset(bool active);
 // Set the cursor's position.
-void vga_cpos(u8 x, u8 y);
+void vga_cpos(uint8_t x, uint8_t y);

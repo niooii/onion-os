@@ -2,8 +2,8 @@
 
 #include <def.h>
 
-u8  inb(u16 port);
-u16 inw(u16 port);
+uint8_t  inb(uint16_t port);
+uint16_t inw(uint16_t port);
 
-void outb(u16 port, u8 val);
-void outw(u16 port, u16 val);
+void outb(uint16_t port, uint8_t val);
+void outw(uint16_t port, uint16_t val);
