@@ -1,24 +1,24 @@
 #include <drivers/vga.h>
 #include <io.h>
 
-static volatile u16* cpos = (u16*)0xB8000;
+static volatile uint16_t* cpos = (uint16_t*)0xB8000;
 
 static inline void set_cpos_current()
 {
-    usize offset = ((usize)cpos - 0xB8000) / 2;
+    size_t offset = ((size_t)cpos - 0xB8000) / 2;
     vga_cpos(offset % VGA_WIDTH, offset / VGA_WIDTH);
 }
 
 void vga_clear()
 {
-    for (usize i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+    for (size_t i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
         cpos[i] = 0x0;
     }
 }
 
 void vga_print(const char* str)
 {
-    u8 col = 0x0f;
+    unsigned char col = 0x0f;
     while (*str) {
         *cpos++ = (col << 8 | (*str++));
     }
@@ -27,14 +27,14 @@ void vga_print(const char* str)
 
 void vga_putchar(const char c)
 {
-    u8 col  = 0x0f;
-    *cpos++ = (col << 8) | c;
+    unsigned char col = 0x0f;
+    *cpos++           = (col << 8) | c;
     set_cpos_current();
 }
 
 void vga_delchar()
 {
-    if ((usize)cpos > 0xB8000) {
+    if ((size_t)cpos > 0xB8000) {
         // TODO! order matters for the cursor apparently
         *--cpos = 0x0;
         // *cpos-- = 0x0;
@@ -56,12 +56,12 @@ void vga_cset(bool active)
     }
 }
 
-void vga_cpos(u8 x, u8 y)
+void vga_cpos(unsigned char x, unsigned char y)
 {
-    u16 pos = y * VGA_WIDTH + x;
+    uint16_t pos = y * VGA_WIDTH + x;
 
     outb(0x3D4, 0x0F);
-    outb(0x3D5, (u8)(pos & 0xFF));
+    outb(0x3D5, (unsigned char)(pos & 0xFF));
     outb(0x3D4, 0x0E);
-    outb(0x3D5, (u8)((pos >> 8) & 0xFF));
+    outb(0x3D5, (unsigned char)((pos >> 8) & 0xFF));
 }

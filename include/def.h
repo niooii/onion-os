@@ -5,11 +5,8 @@
 
 typedef uint8_t bool;
 
-typedef size_t usize;
-
-#define true  1
-#define false 0
-
+#define true          1
+#define false         0
 #define ASM           __asm__ volatile
 #define CODE_SELECTOR 0x8
 #define DATA_SELECTOR 0x10

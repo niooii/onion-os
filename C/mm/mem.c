@@ -1,11 +1,11 @@
 #include <mm/mem.h>
 
-void* memset(void* dest, i32 c, usize n)
+void* memset(void* dest, int c, size_t n)
 {
-    u8* d = (u8*)dest;
+    unsigned char* d = (unsigned char*)dest;
 
-    for (usize i = 0; i < n; i++) {
-        d[i] = (u8)c;
+    for (size_t i = 0; i < n; i++) {
+        d[i] = (unsigned char)c;
     }
 
     return dest;
