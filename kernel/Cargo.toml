@@ -5,6 +5,10 @@ edition = "2021"
 
 [lib]
 crate-type = ["staticlib"] 
+path = "src/kmain.rs"
+test = false
+doctest = false
+bench = false
 
 [profile.dev]
 panic = "abort" # no stack unwinding on panic
@@ -25,5 +29,3 @@ panic = "abort"
 incremental = false # consistent builds every time
 
 rpath = false # dynamic paths dont need to be resolved in kernelspace
-
-[dependencies]

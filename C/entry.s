@@ -1,5 +1,17 @@
 [BITS 32]
 
+; stupid multiboot stuff
+MULTIBOOT_MAGIC    equ  0x1BADB002
+MULTIBOOT_FLAGS    equ  0x00000003  
+MULTIBOOT_CHECKSUM equ  -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)  ; Checksum
+
+section .multiboot
+align 4 
+multiboot_header:
+    dd MULTIBOOT_MAGIC 
+    dd MULTIBOOT_FLAGS   
+    dd MULTIBOOT_CHECKSUM  
+
 extern kernel_main
 CODE_SEG equ 0x8 
 DATA_SEG equ 0x10 
@@ -7,6 +19,8 @@ DATA_SEG equ 0x10
 global entry
 
 entry:
+    cli
+    
     ; setup segments and the stack
     mov ax, DATA_SEG
     mov ds, ax
@@ -33,7 +47,6 @@ entry:
     mov al, 00000001b
     out 0x21, al
 
-    sti
     call kernel_main
 
     jmp $

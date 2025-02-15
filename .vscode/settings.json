@@ -1,28 +1,8 @@
 {
-    "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
     "editor.minimap.enabled": false,
-    "terminal.integrated.shell.windows": "c:/Program Files/PowerShell/7/pwsh.exe",
     "workbench.statusBar.visible": true,
     "editor.lineNumbers": "on",
-    "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "newLine",
-    "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "newLine",
-    "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "newLine",
-    "C_Cpp.vcFormat.space.pointerReferenceAlignment": "left",
     "C_Cpp.clang_format_sortIncludes": false,
-    "C_Cpp.vcFormat.indent.namespaceContents": true,
-    "editor.tokenColorCustomizations": {
-        "textMateRules": [
-            {
-                "scope": [
-                    "entity.name.type",
-                    "entity.name.type.typedef"
-                ],
-                "settings": {
-                    "foreground": "#C6A0F6"
-                }
-            }
-        ]
-    },
     "window.zoomLevel": 0,
     "editor.tabCompletion": "on",
     "todohighlight.isEnable": true,
@@ -53,5 +33,45 @@
     },
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
-    }
+    },
+    "rust-analyzer.check.command": "clippy",
+    // when changing be sure to change the warnings and errors
+    // in the .cargo/config.toml to match.
+    "rust-analyzer.check.extraArgs": [
+        "--",
+        "-D",
+        "improper_ctypes",
+        "-D",
+        "improper_ctypes_definitions",
+        "-D",
+        "clippy::all",
+        "-W",
+        "clippy::pedantic",
+        "-W",
+        "clippy::cargo",
+        "-A",
+        "clippy::cargo-common-metadata",
+        "-A",
+        "unused_variables",
+        "-A",
+        "clippy::missing_safety_doc",
+        "-A",
+        "clippy::module_name_repetitions",
+        "-A",
+        "clippy::zero_ptr",
+        "-A",
+        "missing_docs",
+        "-A",
+        "clippy::cast_possible_truncation",
+        "-A",
+        "clippy::empty_loop",
+        "-A",
+        "clippy::cast_sign_loss",
+        "-W",
+        "clippy::inline_asm_x86_att_syntax",
+        "-D",
+        "clippy::unwrap_used"
+    ],
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.cargo.buildScripts.overrideCommand": null,
 }

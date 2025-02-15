@@ -2,35 +2,28 @@ BUILD_DIR = build
 LD = $(TOOLCHAIN_DIR)/i686-elf-ld
 LDFLAGS = -static -T kernel/linker.ld -nostdlib
 
-.PHONY: all clean run debug loader kernel
+KERNEL_ELF = $(BUILD_DIR)/kernel.elf
 
-all: $(BUILD_DIR)/os.bin
+.PHONY: all clean run debug kernel
 
-$(BUILD_DIR)/os.bin: loader kernel
-	@mkdir -p $(BUILD_DIR)
-	rm -rf $@
-	dd if=$(BUILD_DIR)/loader.bin >> $@
-	dd if=$(BUILD_DIR)/kernel.bin >> $@
-	dd if=/dev/zero bs=512 count=100 >> $@
+all: $(KERNEL_ELF)
 
-loader:
-	$(MAKE) -C loader
+$(KERNEL_ELF): linker.ld kernel
+	$(LD) -static -T linker.ld -nostdlib \
+	--build-id=none -Map=$(BUILD_DIR)/kernel.map \
+	$(BUILD_DIR)/cobjs.o $(BUILD_DIR)/liboos_kernel.a -o $@
 
 kernel:
-	$(MAKE) -C kernel
-	# $(MAKE) -C rust
-	# $(LD) $(LDFLAGS) $(BUILD_DIR)/kernel.o $(BUILD_DIR)/liboos_kernel.a -o $(BUILD_DIR)/kernel.bin
-
-	$(LD) $(LDFLAGS) $(BUILD_DIR)/kernel.o -o $(BUILD_DIR)/kernel.bin
+	$(MAKE) -C C -j
+	$(MAKE) -C kernel -j
 
 clean:
-	$(MAKE) -C loader clean
+	$(MAKE) -C C clean
 	$(MAKE) -C kernel clean
-	# $(MAKE) -C rust clean
 	rm -rf $(BUILD_DIR)
 
-run: $(BUILD_DIR)/os.bin
-	qemu-system-i386 -hda $<
+run: $(KERNEL_ELF)
+	qemu-system-i386 -kernel $<
 
-debug: $(BUILD_DIR)/os.bin
+debug: $(KERNEL_ELF)
 	gdb -x debug.gdb

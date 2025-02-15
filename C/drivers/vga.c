@@ -1,12 +1,19 @@
 #include <drivers/vga.h>
 #include <io.h>
 
-volatile static u16* cpos = (u16*)0xB8000;
+static volatile u16* cpos = (u16*)0xB8000;
 
 static inline void set_cpos_current()
 {
     usize offset = ((usize)cpos - 0xB8000) / 2;
     vga_cpos(offset % VGA_WIDTH, offset / VGA_WIDTH);
+}
+
+void vga_clear()
+{
+    for (usize i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
+        cpos[i] = 0x0;
+    }
 }
 
 void vga_print(const char* str)
