@@ -1,5 +1,6 @@
 #![no_std]
 mod binds;
+
 use core::panic::PanicInfo;
 
 #[panic_handler]
@@ -17,6 +18,7 @@ pub extern "C" fn kernel_main() -> ! {
         cinit();
         binds::vga_print(c"HEYH MAN!!!".as_ptr());
     }
+
     // erm,
     loop {}
 }
