@@ -50,6 +50,8 @@
         "-W",
         "clippy::cargo",
         "-A",
+        "clippy::cargo-common-metadata",
+        "-A",
         "unused_variables",
         "-A",
         "clippy::missing_safety_doc",
@@ -69,5 +71,7 @@
         "clippy::inline_asm_x86_att_syntax",
         "-D",
         "clippy::unwrap_used"
-    ]
+    ],
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.cargo.buildScripts.overrideCommand": null,
 }
