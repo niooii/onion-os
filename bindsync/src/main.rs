@@ -15,12 +15,12 @@ use lazy_static::lazy_static;
 lazy_static! {
     pub static ref C_INCLUDE_DIR: PathBuf = PathBuf::from("../include");
     pub static ref RUST_DIR: PathBuf = PathBuf::from("../kernel");
+    pub static ref RUST_BINDS_DIR: PathBuf = RUST_DIR.join("src/c");
     pub static ref BUILD_DIR: PathBuf = PathBuf::from("../build");
 }
 
 fn main() -> Result<()> {
-    let mut c_binds = CBindings::new(&C_INCLUDE_DIR)?;
-    c_binds.generate();
+    cbinds::generate()?;
 
     Ok(())
 }

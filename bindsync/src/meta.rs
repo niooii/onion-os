@@ -21,7 +21,7 @@ pub struct Metadata {
 
 #[derive(Deserialize, Serialize)]
 #[serde(transparent)]
-pub struct Metamap {
+pub struct FileTracker {
     map: HashMap<PathBuf, Metadata>,
 }
 
@@ -41,7 +41,7 @@ impl Default for ChangeKind {
     }
 }
 
-impl Metamap {
+impl FileTracker {
     fn save_name_to_path(save_name: &str) -> PathBuf {
         BUILD_DIR.join(format!("{save_name}.meta"))
     }
@@ -63,10 +63,11 @@ impl Metamap {
     pub fn read(files_dir: &Path, save_name: &str) -> Result<Self> {
         let path = Self::save_name_to_path(save_name);
 
-        let mut mm: Metamap =
+        let mut mm: FileTracker =
             { serde_json::from_str(&std::fs::read_to_string(path).unwrap_or("{}".into()))? };
 
-        // TODO! vporocess changes
+        std::fs::create_dir_all(files_dir)?;
+
         for entry in WalkDir::new(files_dir) {
             let e = entry.expect("Couldn't read file");
             if e.file_type().is_dir() {
