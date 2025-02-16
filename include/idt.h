@@ -49,3 +49,6 @@ void do_thing(struct test_thing t);
 void idt_set(int i, void* addr);
 void idt_init();
 void idt_load();
+
+void disable_interrupts();
+void enable_interrupts();

@@ -3,6 +3,9 @@ unsafe extern "C" {
     pub fn vga_print(str_: *const ::core::ffi::c_char);
 }
 unsafe extern "C" {
+    pub fn vga_println(str_: *const ::core::ffi::c_char);
+}
+unsafe extern "C" {
     pub fn vga_putchar(c: ::core::ffi::c_char);
 }
 unsafe extern "C" {

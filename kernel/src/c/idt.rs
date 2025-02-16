@@ -21,3 +21,9 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn idt_load();
 }
+unsafe extern "C" {
+    pub fn disable_interrupts();
+}
+unsafe extern "C" {
+    pub fn enable_interrupts();
+}

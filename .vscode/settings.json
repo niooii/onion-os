@@ -22,7 +22,8 @@
         "def.h": "c",
         "stdint.h": "c",
         "sstream": "c",
-        "regex": "c"
+        "regex": "c",
+        "*.inc": "c"
     },
     "nasm.outputFormat": "elf32",
     // formatting

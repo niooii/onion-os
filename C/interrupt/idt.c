@@ -62,5 +62,15 @@ void idt_init()
 void idt_load()
 {
     ASM("lidt %0" : : "m"(descriptor));
+    enable_interrupts();
+}
+
+void disable_interrupts()
+{
+    ASM("cli");
+}
+
+void enable_interrupts()
+{
     ASM("sti");
 }

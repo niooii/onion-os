@@ -99,4 +99,3 @@ struct multiboot_info {
 #define MULTIBOOT_BIT_APM_TABLE        0x00000400
 #define MULTIBOOT_BIT_VBE_INFO         0x00000800
 #define MULTIBOOT_BIT_FRAMEBUFFER_INFO 0x00001000
-void some_callback(int (*callback)(int, int));
