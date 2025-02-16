@@ -3,8 +3,12 @@ OUTPUT_FORMAT(elf32-i386)
 SECTIONS
 {
     . = 1M;
+    
+    .multiboot ALIGN(8) : {
+        KEEP(*(.multiboot))
+    }
+    
     .text : ALIGN(4096) {
-        *(.multiboot)   
         *(.text)
         *(.text.*)
     }

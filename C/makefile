@@ -43,9 +43,9 @@ C_SRCS := $(shell find . -name '*.c')
 ASM_SRCS := $(shell find . -name '*.s' -not -name 'entry.s')
 
 # Objects
-ENTRY_OBJ := $(ENTRY_SRC:./%.s=$(BUILD_DIR)/$(TARGET)/%.o)
-C_OBJS := $(C_SRCS:./%.c=$(BUILD_DIR)/$(TARGET)/%.o)
-ASM_OBJS := $(ASM_SRCS:./%.s=$(BUILD_DIR)/$(TARGET)/%.o)
+ENTRY_OBJ := $(ENTRY_SRC:./%.s=$(BUILD_DIR)/$(TARGET)/%.s.o)
+C_OBJS := $(C_SRCS:./%.c=$(BUILD_DIR)/$(TARGET)/%.c.o)
+ASM_OBJS := $(ASM_SRCS:./%.s=$(BUILD_DIR)/$(TARGET)/%.s.o)
 
 ALL_OBJS = $(ENTRY_OBJ) $(C_OBJS) $(ASM_OBJS)
 
@@ -56,11 +56,11 @@ all: $(BUILD_DIR)/cobjs.o
 $(BUILD_DIR)/cobjs.o: $(ALL_OBJS)
 	$(LD) -g -relocatable $(ALL_OBJS) -o $@
 
-$(BUILD_DIR)/$(TARGET)/%.o: %.c
+$(BUILD_DIR)/$(TARGET)/%.c.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET)/%.o: %.s
+$(BUILD_DIR)/$(TARGET)/%.s.o: %.s
 	@mkdir -p $(dir $@)
 	$(ASM) $(ASMFLAGS) $< -o $@
 

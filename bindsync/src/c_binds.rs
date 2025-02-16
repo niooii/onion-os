@@ -31,7 +31,7 @@ fn rust_to_header(header: &Path) -> PathBuf {
 }
 
 /// Returns the path the bindings were written to
-fn gen_binds(include: &Path) -> Result<Option<PathBuf>> {
+fn gen_binds(include: &Path) -> Result<bool> {
     let binds = Builder::default()
         .header(include.to_string_lossy().into_owned())
         .clang_arg("-I../include")
@@ -49,13 +49,13 @@ fn gen_binds(include: &Path) -> Result<Option<PathBuf>> {
 
     let content = String::from_utf8_lossy(&buf);
     if content.trim().is_empty() {
-        Ok(None)
+        Ok(false)
     } else {
         let out = header_to_rust(include);
         fs::create_dir_all(out.parent().unwrap_or(Path::new("/")))?;
         let mut file = fs::File::create(&out)?;
         file.write_all(&buf)?;
-        Ok(Some(out))
+        Ok(true)
     }
 }
 
@@ -150,17 +150,25 @@ pub fn generate() -> Result<()> {
         for (path, meta) in headers.changed() {
             match meta.change {
                 ChangeKind::Created | ChangeKind::Modified => {
-                    let out = gen_binds(path)?;
-                    if let Some(outp) = out {
+                    let outp = header_to_rust(path);
+                    let previously_existed = outp.exists();
+                    let wrote = gen_binds(path)?;
+                    if wrote {
                         println!(
                             "Generate bindings for {} at {}.",
                             path.to_string_lossy(),
                             outp.to_string_lossy()
                         );
-                        //
-                        mod_change = meta.change == ChangeKind::Created;
+                        // check if modules needs to be regenerated
+                        if !mod_change {
+                            mod_change =
+                                (!previously_existed) || (meta.change == ChangeKind::Created);
+                        }
                     } else {
                         println!("No bindings for {}, discard.", path.to_string_lossy());
+                        if previously_existed {
+                            to_remove.push(outp);
+                        }
                     }
                 }
                 ChangeKind::Deleted => {
@@ -182,12 +190,13 @@ pub fn generate() -> Result<()> {
         // (Re)create mod.rs files
         update_mods(&RUST_BINDS_DIR)?;
         // After the mod files are finalized, sweep away the ones from the removed headers.
-        for deleted in to_remove {
-            remove_mod_recursive(
-                deleted.parent().expect("No parents??"),
-                &mod_name_from_file(&deleted).expect("????"),
-            )?;
-        }
+    }
+
+    for deleted in to_remove {
+        remove_mod_recursive(
+            deleted.parent().expect("No parents??"),
+            &mod_name_from_file(&deleted).expect("????"),
+        )?;
     }
 
     headers
