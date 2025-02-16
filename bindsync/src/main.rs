@@ -1,14 +1,12 @@
+#![allow(dead_code)]
 #[allow(clippy::non_std_lazy_statics)]
-mod cbinds;
+mod c_binds;
+mod rust_binds;
 mod tracker;
 
-use std::{
-    path::{Path, PathBuf},
-    sync::LazyLock,
-};
+use std::path::PathBuf;
 
 use anyhow::Result;
-use walkdir::WalkDir;
 
 use lazy_static::lazy_static;
 lazy_static! {
@@ -19,7 +17,7 @@ lazy_static! {
 }
 
 fn main() -> Result<()> {
-    cbinds::generate()?;
+    c_binds::generate()?;
 
     Ok(())
 }

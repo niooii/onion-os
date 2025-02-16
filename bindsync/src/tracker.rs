@@ -1,8 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{File, FileType},
     io::{BufReader, Read, Write},
-    os::unix::fs::MetadataExt,
     path::{Path, PathBuf},
 };
 
@@ -92,10 +90,13 @@ impl FileTracker {
             } else {
                 let hash = Self::hash(e.path())?;
 
-                self.map.insert(e.path().to_path_buf(), Metadata {
-                    hash,
-                    change: ChangeKind::Created,
-                });
+                self.map.insert(
+                    e.path().to_path_buf(),
+                    Metadata {
+                        hash,
+                        change: ChangeKind::Created,
+                    },
+                );
             }
         }
 
