@@ -50,38 +50,6 @@ pub extern "C" fn kernel_main() -> ! {
         c::drivers::vga::vga_println(c"HEYH MAN!!! testing yay".as_ptr());
         c::drivers::vga::vga_println(
             c"HEYH MAN!!! testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
-        String that i def want to have in my kernel prints yes testing yay Some very long
         String that i def want to have in my kernel prints yes "
                 .as_ptr(),
         );
