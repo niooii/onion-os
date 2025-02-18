@@ -14,7 +14,7 @@ multiboot_header:
     dd MULTIBOOT_FLAGS   
     dd MULTIBOOT_CHECKSUM  
 
-extern c_entry
+extern kinit
 CODE_SEG equ 0x8 
 DATA_SEG equ 0x10 
 
@@ -51,7 +51,7 @@ entry:
     mov al, 00000001b
     out 0x21, al
 
-    call c_entry
+    call kinit
 
     hlt
     jmp $

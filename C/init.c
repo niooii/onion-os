@@ -1,10 +1,11 @@
 #include <idt.h>
 #include <drivers/vga.h>
 #include <multiboot.h>
+#include "mm/pmm.h"
 
 extern void kernel_main();
 
-void c_entry(uint32_t magic, struct multiboot_info* mbi)
+void kinit(uint32_t magic, struct multiboot_info* mbi)
 {
     vga_clear();
     vga_cset(true);
@@ -18,8 +19,8 @@ void c_entry(uint32_t magic, struct multiboot_info* mbi)
         vga_println("Failed to obtain memory map, stopping.");
         return;
     }
-
-    struct multiboot_mmap_entry* entry = (struct multiboot_mmap_entry*)(mbi->mmap_addr);
+    if (!pmm_init(mbi))
+        return;
     // framebuffer stuff later
 
     idt_init();

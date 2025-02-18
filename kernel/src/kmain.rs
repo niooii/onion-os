@@ -49,14 +49,12 @@ pub extern "C" fn kernel_main() -> ! {
     unsafe {
         c::drivers::vga::vga_println(c"HEYH MAN!!! testing yay".as_ptr());
         c::drivers::vga::vga_println(
-            c"HEYH MAN!!! testing yay Some very long
-        String that i def want to have in my kernel prints yes "
-                .as_ptr(),
+            c"Some very long\nString that i def want to have in my kernel prints yes ".as_ptr(),
         );
     }
     // This should panic
-    // let mut something = Vec::<String>::new();
-    // something.push(String::new());
+    let mut something = Vec::<String>::new();
+    something.push(String::new());
     // erm,
     loop {}
 }
