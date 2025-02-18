@@ -14,12 +14,12 @@ void c_entry(uint32_t magic, struct multiboot_info* mbi)
         return;
     }
 
-    if (!(mbi->flags & MULTIBOOT_BIT_MEM_MAP)) {
+    if (!(mbi->flags & MULTIBOOT_INFO_MEM_MAP)) {
         vga_println("Failed to obtain memory map, stopping.");
         return;
     }
 
-    uint64_t mem = (mbi->mem_upper << 32) | mbi->mem_lower;
+    struct multiboot_mmap_entry* entry = (struct multiboot_mmap_entry*)(mbi->mmap_addr);
     // framebuffer stuff later
 
     idt_init();

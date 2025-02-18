@@ -2,8 +2,9 @@
 
 ; stupid multiboot2 stuff
 MULTIBOOT_MAGIC    equ  0x1BADB002
-; request memory and video info
-MULTIBOOT_FLAGS    equ  (1 << 1) | (1 << 2) 
+; bit 1 aligns stuff on pages, bit 2 requests mem info, 
+; bit 12 requests video and framebuffer info
+MULTIBOOT_FLAGS equ (1 << 1) | (1 << 2) | (1 << 12)
 MULTIBOOT_CHECKSUM equ  -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)  ; checksum
 
 section .multiboot

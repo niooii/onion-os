@@ -15,16 +15,17 @@ CFLAGS = -I$(INCLUDE_DIR) \
  -fdata-sections \
  -fdata-sections \
  -ffunction-sections \
+ -Wall \
  -Wno-unused-functions \
  -fno-builtin \
  -Werror \
  -Wno-unused-label \
  -Wno-cpp \
  -Wno-unused-parameter \
+ -Wno-unused-variable \
  -nostdlib \
  -nostartfiles \
  -nodefaultlibs \
- -Wall \
  -O0 \
  -m32 \
  -march=i686 \
