@@ -20,6 +20,7 @@ struct pmm {
     /*
      * OPT! save where the last valid region of memory ends, then cut out map off there.
      * No point in looking past that region.
+     * ORRRR... also do that for the beginning and set the start addr accordingly.
      */
     uint64_t total_frames;
     uint64_t used_frames;
