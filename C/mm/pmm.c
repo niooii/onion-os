@@ -7,7 +7,7 @@ struct pmm {
 };
 
 static struct pmm pmm;
-extern uint32_t   kernel_end;
+extern char       kernel_end[];
 
 bool pmm_init(multiboot_info_t* mbi)
 {
@@ -21,6 +21,7 @@ bool pmm_init(multiboot_info_t* mbi)
     // calculate the kernel's end address so we can place
     // our bitmaps there
     uint32_t* free = (uint32_t*)&kernel_end;
+
     return true;
 }
 

@@ -4,8 +4,8 @@
 #include <drivers/keyboard.h>
 #include <io.h>
 
-struct idt_entry      entries[OOS_MAX_INTS];
-struct idt_descriptor descriptor;
+static struct idt_entry      entries[OOS_MAX_INTS];
+static struct idt_descriptor descriptor;
 
 DECLARE_HW_INT(unimplemented);
 DEFINE_HW_INT(unimplemented, {});
