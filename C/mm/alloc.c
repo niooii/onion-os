@@ -1,5 +1,7 @@
-#include <mm/alloc.h>
 #include <def.h>
+#include <mm/alloc.h>
+
+#include "pmm.h"
 
 #define SIZE_CLASS_1 128
 #define SIZE_CLASS_2 512

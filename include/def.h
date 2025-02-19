@@ -5,9 +5,11 @@
 
 typedef uint8_t bool;
 
-#define true          1
-#define false         0
-#define ASM           __asm__ volatile
+#define true        1
+#define false       0
+#define ASM         __asm__ volatile
+#define FORCEINLINE inline __attribute__((always_inline))
+// TODO! read from registers
 #define CODE_SELECTOR 0x8
 #define DATA_SELECTOR 0x10
 
