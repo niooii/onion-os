@@ -30,6 +30,14 @@ extern char       kernel_end[];
 
 typedef multiboot_memory_map_t mm_entry;
 
+/*
+ * FATAL! this entire function is wrong lol
+ * instead of incrementing, (beause multiboot does not guarentee each entry
+ * describes sequential and contiguous memory relative to the previous), we
+ * need to directly calculate the offset in the bitmap, and memset from there. the bitmap
+ * is now guarenteed to contain everything. (BUT THERE MAY BE GAPS after the iterations,
+ * these must be accounted for by setting those pages to FRAME_BIT_USED)
+ */
 bool pmm_init(multiboot_info_t* mbi)
 {
     /*
@@ -66,23 +74,25 @@ bool pmm_init(multiboot_info_t* mbi)
         }
 
         uint32_t num_frames = (end - start) >> __builtin_ctz(FRAME_SIZE);
-
         // divide by 8 bc 8 frames can be stored in 1 bit
         uint32_t bytes_to_use = num_frames >> 3;
-        uint32_t leftover     = num_frames % 8;
-        prev_leftover++;
 
-        int status = entry->type == MULTIBOOT_MEMORY_AVAILABLE ? FRAME_FREE_BIT : FRAME_USED_BIT;
+        if (prev_leftover == 0) {
+            uint32_t leftover = num_frames % 8;
 
-        // TODO! account for carry
-        memset(bm, status, bytes_to_use);
-        // account for carry here with some bit magic
+            int status =
+                entry->type == MULTIBOOT_MEMORY_AVAILABLE ? FRAME_FREE_BIT : FRAME_USED_BIT;
 
-        bm += bytes_to_use;
+            // TODO! account for carry
+            memset(bm, status, bytes_to_use);
+            // account for carry here with some bit magic
+            bm += bytes_to_use;
+            prev_leftover = leftover;
+        } else {
+        }
 
         pmm.total_frames += num_frames;
 
-        prev_leftover = leftover;
     // TODO!
     next_entry:
         entry = (mm_entry*)((size_t)entry + entry->size + sizeof(entry->size));
