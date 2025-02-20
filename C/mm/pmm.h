@@ -9,6 +9,6 @@
 // Returns false if failed for whatever reason.
 bool pmm_init(multiboot_info_t* mboot_info);
 // Allocate a single page
-void* pmm_alloc_page();
+void* pmm_alloc_frame();
 // Free a single page
-void pmm_free_page(void* page);
+void pmm_free_frame(void* page);

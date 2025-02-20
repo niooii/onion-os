@@ -1,6 +1,6 @@
 #include <mm/alloc.h>
 #include <mm/mem.h>
-
+#include <drivers/vga.h>
 #include "pmm.h"
 
 // Must be a power of 2
@@ -36,14 +36,54 @@ typedef multiboot_memory_map_t mm_entry;
 // frame num 0 corresponds to the first bit in the bitmap
 void set_frame_bit(uint64_t frame_num, int status)
 {
-    uint64_t i = frame_num >> 6;
-    pmm.bitmap[i] |= ((uint64_t)status << (frame_num % 64));
+    pmm.bitmap[frame_num >> 6] |= ((uint64_t)status << (frame_num % 64));
 }
 
 // Status must be either FRAME_FREE_BIT or FRAME_USED_BIT
 // Start and end inclusive
 void set_frame_bits(uint64_t start_frame, uint64_t end_frame, int status)
 {
+    if (start_frame > end_frame)
+        return;
+
+    uint64_t start_idx = start_frame >> 6;
+    uint64_t end_idx   = end_frame >> 6;
+
+    // if they are in the same bitmap element
+    if (start_idx == end_idx) {
+        uint64_t mask = 0;
+        mask = ((1ULL << (end_frame % 64 - start_frame % 64 + 1)) - 1) << (start_frame % 64);
+
+        if (status == FRAME_FREE_BIT)
+            pmm.bitmap[start_idx] |= mask;
+        else
+            pmm.bitmap[start_idx] &= ~mask;
+
+        return;
+    }
+
+    // for the first partial uint64_t
+    {
+        uint64_t mask = ~0ULL << (start_frame % 64);
+        if (status == FRAME_FREE_BIT)
+            pmm.bitmap[start_idx] |= mask;
+        else
+            pmm.bitmap[start_idx] &= ~mask;
+    }
+
+    // for all the complete elements
+    for (uint64_t idx = start_idx + 1; idx < end_idx; idx++) {
+        pmm.bitmap[idx] = (status == FRAME_FREE_BIT) ? ~0ULL : 0;
+    }
+
+    // for the end partial uint64_t
+    {
+        uint64_t mask = ~0ULL >> (63 - (end_frame % 64));
+        if (status == FRAME_FREE_BIT)
+            pmm.bitmap[start_idx] |= mask;
+        else
+            pmm.bitmap[start_idx] &= ~mask;
+    }
 }
 
 bool pmm_init(multiboot_info_t* mbi)
@@ -102,11 +142,11 @@ bool pmm_init(multiboot_info_t* mbi)
     return true;
 }
 
-void* pmm_alloc_page()
+void* pmm_alloc_frame()
 {
     return NULL;
 }
 
-void pmm_free_page(void* page)
+void pmm_free_frame(void* frame)
 {
 }
