@@ -23,6 +23,7 @@ CFLAGS = -I$(INCLUDE_DIR) \
  -Wno-cpp \
  -Wno-unused-parameter \
  -Wno-unused-variable \
+ -std=c17 \
  -nostdlib \
  -nostartfiles \
  -nodefaultlibs \

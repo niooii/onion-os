@@ -4,9 +4,10 @@
 #include "pmm.h"
 
 // Must be a power of 2
-#define FRAME_SIZE     0x1000
-#define FRAME_FREE_BIT 1
-#define FRAME_USED_BIT 0
+#define FRAME_SIZE        0x1000
+#define FRAME_FREE_BIT    1
+#define FRAME_USED_BIT    0
+#define FRAME_NUM_INVALID UINT64_MAX
 
 struct pmm {
     /*
@@ -17,12 +18,14 @@ struct pmm {
      */
     uint64_t* bitmap;
     // The address where the bitmap starts logically representing frames
+    // TODO! starts at 0 for now. This is unused.
     uint64_t start_addr;
     /*
      * OPT! save where the last valid region of memory ends, then cut out map off there.
      * No point in looking past that region.
      * ORRRR... also do that for the beginning and set the start addr accordingly.
      */
+    // The total complete frames.
     uint64_t total_frames;
     uint64_t used_frames;
 };
@@ -86,6 +89,25 @@ void set_frame_bits(uint64_t start_frame, uint64_t end_frame, int status)
     }
 }
 
+// Returns the frame number. Returns FRAME_NUM_INVALID if nothing was found.
+uint64_t first_free_frame()
+{
+    uint64_t i = 0;
+    // round up the iteration count to handle the partially filled bitmap element
+    // since it should be zeroed past the end anyways it should be fine.
+    for (; i < (pmm.total_frames + 63) >> 6; i++) {
+        // TODO! bro is this safe or nah idk
+        // https://github.com/microsoft/compiler-rt/blob/master/lib/builtins/ffsdi2.c
+        // holy shit
+        uint64_t pos = __builtin_ffsll(pmm.bitmap[i]);
+        if (pos != 0) {
+            return (i * 64) + (pos - 1);
+        }
+    }
+
+    return FRAME_NUM_INVALID;
+}
+
 bool pmm_init(multiboot_info_t* mbi)
 {
     /*
@@ -109,6 +131,7 @@ bool pmm_init(multiboot_info_t* mbi)
          e           = (mm_entry*)((size_t)e + e->size + sizeof(e->size))) {
         uint64_t end = ALIGN_DOWN(e->addr + e->len, FRAME_SIZE);
         // find the end address
+        // beyond this point there is NO COMPLETE FRAME.
         if (end > mem_end)
             mem_end = end;
     }
@@ -119,7 +142,7 @@ bool pmm_init(multiboot_info_t* mbi)
     // divide by 64 bc 64 frames can be stored in 1 uint64_t (and also round up)
     uint64_t  bm_size = (num_frames + 63) >> 6;
     uint64_t* bm_end  = bm + bm_size;
-    memset(bm, FRAME_USED_BIT, (bm_end - bm) * sizeof(uint64_t));
+    memset(bm, 0, (bm_end - bm) * sizeof(uint64_t));
     // second run to set bits
     for (mm_entry* e = (mm_entry*)mbi->mmap_addr; (size_t)e < mmap_end;
          e           = (mm_entry*)((size_t)e + e->size + sizeof(e->size))) {
@@ -138,6 +161,10 @@ bool pmm_init(multiboot_info_t* mbi)
     }
 
     // TODO! set the frames occupied by the frame bitmap to used
+
+    uint64_t first_free = first_free_frame();
+
+    int iafasf = 0;
 
     return true;
 }
