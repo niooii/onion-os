@@ -35,11 +35,28 @@ extern char       kernel_end[];
 
 typedef multiboot_memory_map_t mm_entry;
 
+int ffs(uint64_t x)
+{
+    uint32_t h = (uint32_t)(x >> 32);
+    uint32_t l = (uint32_t)x;
+
+    if (l != 0)
+        return __builtin_ffs(l);
+    else if (h != 0)
+        return __builtin_ffs(h) + 32;
+    else
+        return 0;
+}
+
 // Status must be either FRAME_FREE_BIT or FRAME_USED_BIT
 // frame num 0 corresponds to the first bit in the bitmap
 void set_frame_bit(uint64_t frame_num, int status)
 {
-    pmm.bitmap[frame_num >> 6] |= ((uint64_t)status << (frame_num % 64));
+    uint64_t mask = 1ULL << (frame_num % 64);
+    if (status == FRAME_FREE_BIT)
+        pmm.bitmap[frame_num >> 6] |= mask;
+    else
+        pmm.bitmap[frame_num >> 6] &= ~mask;
 }
 
 // Status must be either FRAME_FREE_BIT or FRAME_USED_BIT
@@ -83,9 +100,9 @@ void set_frame_bits(uint64_t start_frame, uint64_t end_frame, int status)
     {
         uint64_t mask = ~0ULL >> (63 - (end_frame % 64));
         if (status == FRAME_FREE_BIT)
-            pmm.bitmap[start_idx] |= mask;
+            pmm.bitmap[end_idx] |= mask;
         else
-            pmm.bitmap[start_idx] &= ~mask;
+            pmm.bitmap[end_idx] &= ~mask;
     }
 }
 
@@ -96,10 +113,7 @@ uint64_t first_free_frame()
     // round up the iteration count to handle the partially filled bitmap element
     // since it should be zeroed past the end anyways it should be fine.
     for (; i < (pmm.total_frames + 63) >> 6; i++) {
-        // TODO! bro is this safe or nah idk
-        // https://github.com/microsoft/compiler-rt/blob/master/lib/builtins/ffsdi2.c
-        // holy shit
-        uint64_t pos = __builtin_ffsll(pmm.bitmap[i]);
+        int pos = ffs(pmm.bitmap[i]);
         if (pos != 0) {
             return (i * 64) + (pos - 1);
         }
@@ -138,9 +152,9 @@ bool pmm_init(multiboot_info_t* mbi)
     // frame size trailing zeroes
     int ftz = __builtin_ctz(FRAME_SIZE);
 
-    uint64_t num_frames = mem_end >> ftz;
+    pmm.total_frames = mem_end >> ftz;
     // divide by 64 bc 64 frames can be stored in 1 uint64_t (and also round up)
-    uint64_t  bm_size = (num_frames + 63) >> 6;
+    uint64_t  bm_size = (pmm.total_frames + 63) >> 6;
     uint64_t* bm_end  = bm + bm_size;
     memset(bm, 0, (bm_end - bm) * sizeof(uint64_t));
     // second run to set bits
@@ -162,6 +176,7 @@ bool pmm_init(multiboot_info_t* mbi)
 
     // TODO! set the frames occupied by the frame bitmap to used
 
+    // test stuff delete later
     uint64_t first_free = first_free_frame();
 
     int iafasf = 0;
