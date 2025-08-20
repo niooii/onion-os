@@ -1,4 +1,5 @@
 BUILD_DIR = build
+TOOLCHAIN_DIR = /usr/local/i686elfcc/bin
 LD = $(TOOLCHAIN_DIR)/i686-elf-ld
 LDFLAGS = -static -T kernel/linker.ld -nostdlib
 

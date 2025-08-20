@@ -23,7 +23,6 @@ void kinit(uint32_t magic, struct multiboot_info* mbi)
     vga_println("Init memory.");
     if (!pmm_init(mbi))
         return;
-    vga_println("Finish.");
     // framebuffer stuff later
 
     idt_init();

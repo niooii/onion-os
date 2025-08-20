@@ -160,7 +160,7 @@ bool pmm_init(multiboot_info_t* mbi)
     // second run to set bits
     for (mm_entry* e = (mm_entry*)mbi->mmap_addr; (size_t)e < mmap_end;
          e           = (mm_entry*)((size_t)e + e->size + sizeof(e->size))) {
-        // Start and end are aligned to frame boundaries
+        // start and end are aligned to frame boundaries
         uint64_t start = ALIGN_UP(e->addr, FRAME_SIZE);
         uint64_t end   = ALIGN_DOWN(start + e->len, FRAME_SIZE);
 
@@ -174,7 +174,14 @@ bool pmm_init(multiboot_info_t* mbi)
         set_frame_bits(start_frame, last_frame, FRAME_FREE_BIT);
     }
 
-    // TODO! set the frames occupied by the frame bitmap to used
+    // mark the frames occupied by the bitmap itself as used
+    uint64_t bitmap_start = (uint64_t)bm;
+    uint64_t bitmap_end   = (uint64_t)bm_end;
+    uint64_t bitmap_start_frame = bitmap_start >> ftz;
+    uint64_t bitmap_end_frame   = ((bitmap_end + FRAME_SIZE - 1) >> ftz) - 1;
+    
+    set_frame_bits(bitmap_start_frame, bitmap_end_frame, FRAME_USED_BIT);
+    pmm.used_frames += (bitmap_end_frame - bitmap_start_frame + 1);
 
     // test stuff delete later
     uint64_t first_free = first_free_frame();
@@ -186,9 +193,43 @@ bool pmm_init(multiboot_info_t* mbi)
 
 void* pmm_alloc_frame()
 {
-    return NULL;
+    uint64_t frame_num = first_free_frame();
+    if (frame_num == FRAME_NUM_INVALID) {
+        // erm we might be out of memory
+        return NULL;
+    }
+    
+    // mark the frame as used
+    set_frame_bit(frame_num, FRAME_USED_BIT);
+    pmm.used_frames++;
+    
+    // convert frame number to physical address
+    return (void*)(frame_num * FRAME_SIZE);
 }
 
 void pmm_free_frame(void* frame)
 {
+    if (frame == NULL)
+        return;
+    
+    uint64_t addr = (uint64_t)frame;
+    
+    // check if address is frame-aligned
+    if (addr & (FRAME_SIZE - 1)) {
+        // BUG! tried to free misaligned frame
+        return;
+    }
+    
+    uint64_t frame_num = addr / FRAME_SIZE;
+    
+    // check if frame number is within valid range
+    if (frame_num >= pmm.total_frames) {
+        // BUG! tried to free invalid frame
+        return;
+    }
+    
+    // mark the frame as free
+    set_frame_bit(frame_num, FRAME_FREE_BIT);
+    if (pmm.used_frames > 0)
+        pmm.used_frames--;
 }
